@@ -1,0 +1,50 @@
+@mixin blind {
+	overflow: hidden;
+	position: absolute;
+	clip:rect(0, 0, 0, 0);
+	width:1px;
+	height: 1px;
+	margin: -1px;
+}
+
+@mixin ellipsis($line: 1) {
+	@if ($line == 1) {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	} @else {
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: $line;
+	}
+}
+
+@mixin absoluteFull {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+@mixin absoluteFullCenter {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+@mixin absoluteVerticalCenter {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+@mixin absoluteHorizontalCenter {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
