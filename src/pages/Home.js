@@ -2,117 +2,62 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
+import Aside from '../components/Aside';
+
 import {Icon} from "../asset/js/icon";
 
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.state={
-			centerName : '헬스장 이름 일이삼사오육 이삼사오육칠팔구십',
-			centerNameEditable: false,
-			userImage: {
-				imageSrc:  '../asset/img/@sample_profile.png' ,
-				setImageSrc: '',
-			}
+		this.state = {
+			memberList: [
+				{id: '221003', name: '김문수', date: '22.10.03', reservation: 1},
+				{id: '221001', name: '김동수', date: '22.10.01', reservation: 0},
+				{id: '220920', name: '라강민', date: '22.09.20', reservation: 0},
+				{id: '228010', name: '이선아', date: '22.08.10', reservation: 0}
+			]
 		}
 	}
 
 	componentDidMount() {
 	}
 
-	editableName = () => {
-		this.setState({
-			centerNameEditable: !this.state.centerNameEditable,
-		});
-	}
-
-	editKeydown = (e) => {
-		if(e.which == 13) { // enter
-			this.setState({
-				centerNameEditable: false,
-			});
-		}
-	}
-
-	onClickManage = (e) => {
-		console.log(e);
-	}
-
-	encodeFileToBase64 = (fileBlob) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(fileBlob)
-		console.log(fileBlob);
-		if((fileBlob.type).includes('image/'))
-			return new Promise((resolve) => {
-				reader.onload = () => {
-					this.setState({
-						userImage: {
-							setImageSrc: reader.result
-						},
-					});
-					resolve();
-				};
-			});
-		else {
-			alert('이미지 파일이 아닙니다');
-		}
-	};
-
 	render() {
-		const {centerName, centerNameEditable, userImage} = this.state;
-		const manageList = [
-			{title:'회원 관리', icon: <Icon.ic24TrendingUp/>, router: 'manage', active: true},
-			{title:'회원 등록', icon: <Icon.ic24Summery/>, router: 'register', active: false},
-		];
+		const {memberList} = this.state;
 		return (
-			<div className={'home_wrap'}>
-				<div className={'aside'}>
-					<div className={'aside_header'}>
-						<div className={'company'}>
-							{ <Icon.logoSmallGo/>}
-							{ <Icon.logoSmallGym/>}
-							{ <Icon.logoSmallAdmin className={'logo_admin'} />}
-						</div>
-						<div className={'profile'}>
-							<div className={'thumbnail'}>
-								<img src={ userImage.setImageSrc !== null ? userImage.setImageSrc : require(userImage.imageSrc) } alt=""/>
+			<div id={'wrap'} className={classNames('home_wrap')}>
+				<Aside link={''}/>
+				<div className="container">
+					<h2 className={'blind'}>회원 관리</h2>
+					<div className={'notify_area'}>
 
-								<input type="file" id={'userProfile'} className={'input_file'} onChange={(e) => { this.encodeFileToBase64(e.target.files[0]);}} />
-								<label htmlFor="userProfile" className={'label_file'}> <Icon.ic12Pencil/> </label>
+					</div>
+					<div className={'section'}>
+						<div className={'article'}>
+							<div className={'article_content'}>
+								<strong className={'title'}>새로운 회원을 등록하세요.</strong>
+								<p className={'description'}>신규 회원을 등록하고 한눈에 관리해 보세요!</p>
 							</div>
-
-							<div className={'information'}>
-								<div className={'name_area'}>
-									<div className={'input_name'} contentEditable={centerNameEditable} onKeyDown={e => this.editKeydown(e)} suppressContentEditableWarning={true} >
-										{centerName}
-									</div>
-									<button type={'button'} className={'btn_edit'} onClick={this.editableName}>
-										<Icon.ic8Pencil/>
-									</button>
-								</div>
-								<p className={'description'}>일반 판매 작가</p>
-								<button type={'button'} className={'btn_setting'}>
-									<Icon.ic14Setting/> 계정설정
-								</button>
-							</div>
+							<Link to={'/register'} className={'btn_article'} >
+								회원 등록하기
+							</Link>
 						</div>
 					</div>
-					<div className={'aside_content'}>
-						<ul className={'menage_list'}>
-							{manageList.map((value, index) =>
-								<li key={`index--${value.router}`} className={'item'} onClick={this.onClickManage}>
-									<Link to={value.router}  className={classNames('link', {'active' : value.active} )}>
-										{value.icon}
-										{value.title}
-									</Link>
+					<div className={'section'}>
+						<h3>회원 ({memberList.length}명)</h3>
+						<ul className={'member_list'}>
+							{memberList.map((value, index) =>
+								<li key={`hash--${value.id}`} className={'item'}>
+									<strong>{value.name}</strong>
+									<span className={'date'}>{value.date}</span>
+									<span className={classNames('reservation', {'wait' : value.reservation > 0})}>
+										{value.reservation > 0 && '예약 대기중'}
+										{value.reservation }
+									</span>
 								</li>
 							)}
 						</ul>
 					</div>
-				</div>
-				<div className="container">
-
 				</div>
 			</div>
 		);

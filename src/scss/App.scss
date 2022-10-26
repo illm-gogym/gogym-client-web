@@ -1,4 +1,8 @@
 @import "common/common";
 
+@import "component/aside",
+		"component/container";
+
 @import "page/join",
-		"page/home";
+		"page/home",
+"page/register";

@@ -48,3 +48,27 @@
 	transform: translateX(-50%);
 }
 
+@mixin g-button($height, $space: 16, $font-size: 14, $display: inline-block, $align: 'center') {
+	display: $display;
+	height: $height * 1px;
+	padding: 0 $space * 1px;
+	background-color: #25AAF5;
+	line-height: $height * 1px;
+	font-size: $font-size * 1px;
+	color: #fff;
+	border-radius: 4px;
+}
+
+@mixin placeholder($color: #9d9d9d) {
+	&::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+		color: $color;
+	}
+
+	&:-ms-input-placeholder { /* Internet Explorer 10-11 */
+		color: $color;
+	}
+
+	&::-ms-input-placeholder { /* Microsoft Edge */
+		color: $color;
+	}
+}

@@ -13,7 +13,7 @@ class Join extends React.Component {
 
 	render() {
 		return (
-			<div className={'join_wrap'}>
+			<div id={'wrap'} className={classNames('join_wrap')}>
 				<h1 className={'title'}>
 					<span className="blind">GoGym</span>
 					{ <Icon.logoGo/>}
