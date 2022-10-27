@@ -20,6 +20,7 @@ class Home extends React.Component {
 	}
 
 	componentDidMount() {
+
 	}
 
 	render() {

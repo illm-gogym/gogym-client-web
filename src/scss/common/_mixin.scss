@@ -72,3 +72,12 @@
 		color: $color;
 	}
 }
+
+@mixin clearfix {
+	&::after {
+		content: '';
+		display: block;
+		clear: both;
+		height: 0;
+	}
+}

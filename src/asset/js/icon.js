@@ -10,6 +10,7 @@ import { ReactComponent as ic8Pencil  } from "../svg/ic8-pencil.svg";
 import { ReactComponent as ic14Setting  } from "../svg/ic14-setting.svg";
 import { ReactComponent as ic24Summery  } from "../svg/ic24-summary.svg";
 import { ReactComponent as ic24TrendingUp  } from "../svg/ic24-trending-up.svg";
+import { ReactComponent as ic11Check  } from "../svg/ic11-check.svg";
 
 export const Icon = {
 	'logoAdmin' : logoAdmin,
@@ -23,4 +24,5 @@ export const Icon = {
 	'ic14Setting' : ic14Setting,
 	'ic24TrendingUp' : ic24TrendingUp,
 	'ic24Summery' : ic24Summery,
+	'ic11Check': ic11Check,
 }
