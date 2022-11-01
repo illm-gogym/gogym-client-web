@@ -16,7 +16,6 @@
 				&::before {
 					background: url("data:image/svg+xml,%3Csvg width='11' height='9' viewBox='0 0 11 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4.26667L4.19796 7.58307C4.40981 7.80277 4.76735 7.78306 4.95377 7.5414L10 1' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E%0A") no-repeat center;
 					background-color: currentColor;
-
 				}
 			}
 		}
@@ -25,6 +24,7 @@
 			color: #5784FC;
 
 			.text {
+				display: inline-block;
 				color: #333;
 			}
 
@@ -34,20 +34,26 @@
 				width: 16px;
 				height: 16px;
 				margin-right: 8px;
-				border: 1px solid currentColor;
+				border: 2px solid currentColor;
 				border-radius: 2px;
-				vertical-align: -4px;
+				vertical-align: -5px;
 			}
 		}
 	}
 
 	.modal {
 		.day_list {
+			color: #666;
+
 			.item {
 				display: flex;
 				height: 52px;
 				align-items: center;
 				font-size: 16px;
+
+				& ~ .item {
+					margin-top: 4px;
+				}
 			}
 
 			.text {
@@ -73,6 +79,11 @@
 
 		abbr {
 			text-decoration: none;
+		}
+
+		.react-calendar__navigation__label {
+			font-size: 20px;
+			font-weight: 700;
 		}
 
 		.react-calendar__month-view__weekdays__weekday {
@@ -111,8 +122,8 @@
 
 		.task_calender_tile {
 			position: relative;
-			padding-top: 20px;
 			margin: 0 -1px -1px 0;
+			padding: 20px 6px 6px;
 			border: 1px solid #e1e1e1;
 			height: 105px;
 			color: #666 !important;

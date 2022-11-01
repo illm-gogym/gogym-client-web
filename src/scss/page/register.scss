@@ -73,11 +73,67 @@
 		margin-top: auto;
 
 		.btn_register {
-			@include g-button(44, $font-size: 16, $display: blick);
+			@include g-button(44, $font-size: 16, $display: block);
 			width: 100%;
 
 			&:disabled {
 				background-color: #c9c9c9;
+			}
+		}
+	}
+
+	.modal {
+		text-align: center;
+
+		.title {
+			font-weight: 700;
+			font-size: 22px;
+			line-height: 26px;
+
+			strong {
+				color: #25AAF5;
+			}
+		}
+
+		.description {
+			margin-top: 7px;
+			font-size: 12px;
+			line-height: 16px;
+			color: #9d9d9d;
+		}
+
+		.user_information {
+			display: table;
+			width: 100%;
+			margin: 15px 0 45px;
+			padding: 0 100px;
+			table-layout: fixed;
+			text-align: left;
+			font-size: 16px;
+			box-sizing: border-box;
+
+			.row {
+				display: table-row;
+				padding-top: 4px;
+			}
+
+			.cell {
+				display: table-cell;
+				font-weight: 700;
+				border-top: 10px solid #fff;
+
+				&:first-child {
+					width: 50px;
+				}
+
+				&:last-child {
+					height: 40px;
+					line-height: 40px;
+					padding: 0 20px;
+					color: #25AAF5;
+					background-color: #F6F6F6;
+					border-radius: 2px;
+				}
 			}
 		}
 	}
