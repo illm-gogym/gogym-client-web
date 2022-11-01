@@ -2,14 +2,12 @@ import React from "react";
 import {Icon} from "../asset/js/icon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
-import $ from 'jquery';
 
 class Aside extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state={
 			centerName : '헬스장 이름 최대 노출 얼마나 할지 정해볼까요?',
-			centerNameEditable: false,
 			userImage: {
 				imageSrc:  '/images/@sample_profile.png' ,
 				setImageSrc: '',
@@ -38,26 +36,8 @@ class Aside extends React.Component {
 		)}
 	}
 
-	editableName = (e) => {
-		this.setState({
-			centerNameEditable: !this.state.centerNameEditable,
-		});
-	}
-
-	editNameChange = (e) => {
-		if(e.key === 'Enter') { // enter
-			this.setState({
-				centerNameEditable: false,
-			});
-		} else {
-			this.setState({
-				centerName: e.target.value,
-			});
-		}
-	}
-
 	onClickManage = (e) => {
-		// console.log(this.props.link);
+
 	}
 
 	encodeFileToBase64 = (fileBlob) => {
@@ -101,16 +81,8 @@ class Aside extends React.Component {
 						</div>
 
 						<div className={'information'}>
-							<div className={classNames('name_area',  {'edit': centerNameEditable})}>
-								<div  className={classNames('name')}>
-									{centerName}
-								</div>
-								<textarea spellCheck="false" className={classNames('input_name', '')} onKeyPress={(e) => { this.editNameChange(e) }} >
-									{centerName}
-								</textarea>
-								<button type={'button'} className={'btn_edit'} onClick={this.editableName}>
-									<Icon.ic8Pencil/>
-								</button>
+							<div  className={classNames('name')}>
+								{centerName}
 							</div>
 							<p className={'description'}>정현규 트레이너</p>
 							<button type={'button'} className={'btn_setting'}>

@@ -51,10 +51,6 @@ class Home extends React.Component {
 								<li key={`hash--${value.id}`} className={'item'}>
 									<strong>{value.name}</strong>
 									<span className={'date'}>{value.date}</span>
-									<span className={classNames('reservation', {'wait' : value.reservation > 0})}>
-										{value.reservation > 0 && '예약 대기중'}
-										{value.reservation }
-									</span>
 								</li>
 							)}
 						</ul>
