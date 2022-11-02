@@ -1,12 +1,41 @@
 .schedule_wrap {
+	.tab_area {
+
+		border: 1px solid #E1E1E1;
+	}
+	.tab {
+		display: inline-block;
+		width: 50%;
+
+		input {
+			@include blind;
+
+			&:checked ~ label {
+				background-color: #fff;
+				font-weight: 700;
+			}
+		}
+
+		label {
+			display: block;
+			background-color: #F5F5F5;
+			line-height: 38px;
+			text-align: center;
+		}
+	}
+
+	.list_area {
+		padding: 16px;
+	}
+
 	.trainer_list {
-		margin-top: -10px;
 		@include clearfix;
+		margin-top: -14px;
 
 		.item {
 			float: left;
 			width: 33.33%;
-			margin-top: 10px;
+			margin-top: 14px;
 		}
 
 		.input_check {
@@ -86,6 +115,10 @@
 			font-weight: 700;
 		}
 
+		.react-calendar__viewContainer {
+			margin-right: -6px;
+		}
+
 		.react-calendar__month-view__weekdays__weekday {
 			margin: 0 -1px -1px 0;
 			border: 1px solid #e1e1e1;
@@ -146,7 +179,7 @@
 				display: block;
 				overflow-y: auto;
 				height: 100%;
-				@include scrollHide;
+				//@include scrollHide;
 			}
 
 			.task {
@@ -168,4 +201,8 @@
 			}
 		}
 	}
+}
+
+.mbsc-calendar {
+	max-height: 500px;
 }

@@ -1,10 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import Aside from '../components/Aside';
-
-import {Icon} from "../asset/js/icon";
 import Modal from "../components/Modal";
 
 class Home extends React.Component {

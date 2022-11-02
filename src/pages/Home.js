@@ -4,8 +4,6 @@ import classNames from 'classnames';
 
 import Aside from '../components/Aside';
 
-import {Icon} from "../asset/js/icon";
-
 class Home extends React.Component {
 	constructor(props) {
 		super(props);

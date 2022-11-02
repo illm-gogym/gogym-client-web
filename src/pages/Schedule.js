@@ -2,14 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
-import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 import Aside from '../components/Aside';
 import Calenders from '../components/Calendars';
-
-
-import {Icon} from "../asset/js/icon";
 
 class Home extends React.Component {
 	constructor(props) {
@@ -50,22 +46,31 @@ class Home extends React.Component {
 					</div>
 
 					<div className={'section'}>
-						<ul className={'trainer_list'}>
-							{trainerList.map((value, index) =>
-								<li className={'item'}>
-									<input type="checkbox" id={`${value.id}--${index}`} className={'input_check'}/>
-									<label htmlFor={`${value.id}--${index}`} className={'input_label'}>
-										<span className={'text'}>{value.name}</span>
-									</label>
-								</li>
-							)}
-						</ul>
+						<div className={'tab_area'}>
+							<div className={'tab'}>
+								<input type="radio" id={'part_trainer'} name={'check'} checked={true} />
+								<label htmlFor="part_trainer">트레이너</label>
+							</div>
+							<div className={'tab'}>
+								<input type="radio" id={'part_member'}  name={'check'} />
+								<label htmlFor="part_member">회원</label>
+							</div>
+							<div className={'list_area'}>
+								<ul className={'trainer_list'}>
+									{trainerList.map((value, index) =>
+										<li className={'item'}>
+											<input type="checkbox" id={`${value.id}--${index}`} className={'input_check'}/>
+											<label htmlFor={`${value.id}--${index}`} className={'input_label'}>
+												<span className={'text'}>{value.name}</span>
+											</label>
+										</li>
+									)}
+								</ul>
+							</div>
+						</div>
 					</div>
 
 					<div className={'section'}>
-						{/*<div className={'calendar-container'}>*/}
-							{/*<Calendar />*/}
-						{/*</div>*/}
 						<Calenders />
 					</div>
 				</div>

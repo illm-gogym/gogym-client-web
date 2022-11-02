@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import React from "react";
-import $ from 'jquery';
 
 import Modal from './Modal';
-import {Link} from "react-router-dom";
-import classNames from "classnames";
 
 function Calenders() {
 	const [date, setDate] = useState(new Date());
 	const taskList = [
-		{'date': '2022. 11. 01', 'time': '09:20', 'member': '한예슬'},
-		{'date': '2022. 11. 01', 'time': '12:20', 'member': '김태희'},
-		{'date': '2022. 11. 16', 'time': '17:20', 'member': '비'},
-		{'date': '2022. 11. 25', 'time': '06:20', 'member': '한가인'},
-		{'date': '2022. 11. 27', 'time': '20:20', 'member': '전지현'},
+		{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
+		{'date': '2022. 11. 01 12:20', 'member': '김태희'},
+		{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
+		{'date': '2022. 11. 01 12:20', 'member': '김태희'},
+		{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
+		{'date': '2022. 11. 01 12:20', 'member': '김태희'},
+		{'date': '2022. 11. 16 17:20', 'member': '비'},
+		{'date': '2022. 11. 25 06:20', 'member': '한가인'},
+		{'date': '2022. 11. 27 20:20', 'member': '전지현'},
 	];
 
 	const [dayList, setDayList] = useState([]);
@@ -33,10 +34,11 @@ function Calenders() {
 		setDayList(() => {return []});
 
 		taskList.map((value, index) => {
-			var day = dateSplitDay(new Date(value.date));
+			var day = dateSplitDay(new Date(value.date)),
+				time = dateSplitTime(day);
 			if(day === clickDay) {
 				setDayList((prevState) => {
-					return [{'member': value.member, 'time': value.time}, ...prevState];
+					return [{'member': value.member, 'time': time}, ...prevState];
 				})
 			}
 		});
@@ -54,7 +56,7 @@ function Calenders() {
 
 	const checkTask = (activeStartDate, date, view) => {
 		var taskArr = taskList.map((value, index) => {
-			var currentDate = new Date(`${value.date} ${value.time}`);
+			var currentDate = new Date(value.date);
 			var options = { hour: "numeric", minute: "numeric", hour12: false };
 			if(date.getMonth() === currentDate.getMonth() && date.getDate() === currentDate.getDate() ) {
 				return { member:value.member, time: currentDate.toLocaleTimeString("en-US", options)} ;
