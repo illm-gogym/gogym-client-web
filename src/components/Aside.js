@@ -1,5 +1,5 @@
 import React from "react";
-import {Icon} from "../asset/js/icon";
+import {Icon} from "asset/js/icon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
 
@@ -26,15 +26,15 @@ class Aside extends React.Component {
 
 	onCheckRouter = () => {
 		const currentPage = this.props.link;
-		{this.state.manageList.map((value, index) => {
+		this.state.manageList.map((value, index) => {
 				if(value.router === currentPage) {
-					value.active = true;
+					return value.active = true;
 				} else {
-					value.active = false;
+					return value.active = false;
 				}
 			}
-		)}
-	}
+		)
+	};
 
 	onClickManage = (e) => {
 
@@ -61,7 +61,7 @@ class Aside extends React.Component {
 	};
 
 	render() {
-		const {centerName, centerNameEditable, userImage, manageList} = this.state;
+		const {centerName, userImage, manageList} = this.state;
 		return (
 			<div className={'aside'}>
 				<div className={'aside_header'}>

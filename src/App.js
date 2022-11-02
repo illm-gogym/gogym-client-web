@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import Home from './pages/Home';
-import Join from './pages/Join';
-import Register from './pages/Register';
-import Schedule from './pages/Schedule';
+import Home from 'pages/Home';
+import Join from 'pages/Join';
+import Register from 'pages/Register';
+import Schedule from 'pages/Schedule';
 
 class App extends React.Component {
 	constructor(props) {

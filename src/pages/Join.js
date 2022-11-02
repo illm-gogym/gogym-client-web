@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import {Icon} from "../asset/js/icon";
+import {Icon} from "asset/js/icon";
 
 class Join extends React.Component {
 	constructor(props) {

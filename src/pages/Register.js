@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import Aside from '../components/Aside';
-import Modal from "../components/Modal";
+import Aside from 'components/Aside';
+import Modal from "components/Modal";
 
 class Home extends React.Component {
 	constructor(props) {
@@ -35,7 +35,7 @@ class Home extends React.Component {
 
 
 	render() {
-		const {modalOpen, openModal, closeModal} = this.state;
+		const {modalOpen} = this.state;
 
 		return (
 			<div id={'wrap'} className={classNames('register_wrap')}>

@@ -4,8 +4,8 @@ import classNames from 'classnames';
 
 import 'react-calendar/dist/Calendar.css';
 
-import Aside from '../components/Aside';
-import Calenders from '../components/Calendars';
+import Aside from 'components/Aside';
+import Calenders from 'components/Calendars';
 
 class Home extends React.Component {
 	constructor(props) {

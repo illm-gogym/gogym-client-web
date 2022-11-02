@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Calendar from 'react-calendar';
 import React from "react";
 
-import Modal from './Modal';
+import Modal from 'components/Modal';
 
 function Calenders() {
 	const [date, setDate] = useState(new Date());
@@ -35,7 +35,7 @@ function Calenders() {
 
 		taskList.map((value, index) => {
 			var day = dateSplitDay(new Date(value.date)),
-				time = dateSplitTime(day);
+				time = dateSplitTime(new Date(value.date));
 			if(day === clickDay) {
 				setDayList((prevState) => {
 					return [{'member': value.member, 'time': time}, ...prevState];
