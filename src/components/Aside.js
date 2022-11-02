@@ -9,7 +9,7 @@ class Aside extends React.Component {
 		this.state={
 			centerName : '헬스장 이름 최대 노출 얼마나 할지 정해볼까요?',
 			userImage: {
-				imageSrc:  '/images/@sample_profile.png' ,
+				imageSrc:  'asset/img/@sample_profile.png' ,
 				setImageSrc: '',
 			},
 			manageList: [
