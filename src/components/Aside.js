@@ -7,9 +7,9 @@ class Aside extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state={
-			centerName : '헬스장 이름 최대 노출 얼마나 할지 정해볼까요?',
+			centerName : '1234',
 			userImage: {
-				imageSrc:  'asset/img/@sample_profile.png' ,
+				imageSrc:  '' ,
 				setImageSrc: '',
 			},
 			manageList: [
@@ -22,6 +22,14 @@ class Aside extends React.Component {
 	}
 
 	componentDidMount() {
+		// fetch('api/user')
+		// 	.then(res=>res.json())
+		// 	.then(data=> {
+		// 		this.setState({
+		// 			...this.state,
+		// 			centerName: data.centerName
+		// 		})
+		// 	});
 	}
 
 	onCheckRouter = () => {

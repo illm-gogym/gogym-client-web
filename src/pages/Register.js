@@ -4,12 +4,22 @@ import classNames from 'classnames';
 import Aside from 'components/Aside';
 import Modal from "components/Modal";
 
+import axios from 'axios';
+
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			modalOpen: false,
+			userInfo: {
+				birth: '',
+				name: '',
+				phone: '',
+				address: '',
+				ticket: '',
+			},
+			submitDisabled: true,
 		}
 	}
 
@@ -28,14 +38,51 @@ class Home extends React.Component {
 		});
 	};
 
-	onSubmit = () => {
-		console.log('tt');
-		this.openModal();
+	onInputChange = (e) => {
+		var target = e.target;
+
+		this.setState({
+			...this.state,
+			userInfo: {
+				...this.state.userInfo,
+				[target.name]: target.value
+			}
+		});
 	}
 
+	onSubmit = () => {
+		this.openModal();
+
+		var data = JSON.stringify(this.state.userInfo);
+
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: data
+		};
+
+		fetch('api/userJoin', requestOptions)
+			.then(response => response.json())
+			.then(data => console.log(data));
+
+		// fetch('http://146.56.45.3:8080/api/auth/user/signup', requestOptions)
+		// 	.then(response => response.json())
+		// 	.then(data => console.log(data));
+
+	}
+
+	validate = () => {
+		var objArr = Object.values(this.state.userInfo);
+		if(objArr.indexOf('') === -1) {
+			this.setState({
+				...this.state,
+				submitDisabled: false,
+			});
+		}
+	}
 
 	render() {
-		const {modalOpen} = this.state;
+		const {modalOpen, userInfo, submitDisabled} = this.state;
 
 		return (
 			<div id={'wrap'} className={classNames('register_wrap')}>
@@ -47,32 +94,32 @@ class Home extends React.Component {
 
 					<form className="form_area">
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'이름을 입력해 주세요'} required={'true'}/>
+							<input type="text" className={'form_input'} placeholder={'이름을 입력해 주세요'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate}  name={'name'}/>
 							<label className={'form_label'}>이름</label>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'생년월일을 입력해 주세요'} required={'true'}/>
+							<input type="text" className={'form_input'} placeholder={'생년월일을 입력해 주세요'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'birth'}/>
 							<label className={'form_label'}>생년월일</label>
 							<p className={'form_detail'}>예) 1992.02.28</p>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'01012345678'} required={'true'}/>
+							<input type="text" className={'form_input'} placeholder={'01012345678'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'phone'}/>
 							<label className={'form_label'}>전화번호</label>
 							<p className={'form_detail'}>‘-’ 없이 입력해 주세요 </p>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'주소를 입력해 주세요'} required={'true'}/>
+							<input type="text" className={'form_input'} placeholder={'주소를 입력해 주세요'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'address'}/>
 							<label className={'form_label'}>주소</label>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'0'} required={'true'}/>
+							<input type="text" className={'form_input'} placeholder={'0'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'ticket'}/>
 							<label className={'form_label'}>수강권 (횟수)</label>
 							<p className={'form_detail'}>안내문구 작성하기</p>
 						</div>
 					</form>
 
 					<div className={'register_area'}>
-						<button type={'submit'} className={'btn_register'} disabled={false} onClick={this.onSubmit} >등록 완료</button>
+						<button type={'submit'} className={'btn_register'} disabled={submitDisabled} onClick={this.onSubmit} >등록 완료</button>
 					</div>
 				</div>
 
@@ -85,7 +132,7 @@ class Home extends React.Component {
 					<ul className={'user_information'}>
 						<li className={'row'}>
 							<span className={'cell'}>ID</span>
-							<span className={'cell'}>01012345678</span>
+							<span className={'cell'}>{userInfo.name}</span>
 						</li>
 						<li className={'row'}>
 							<span className={'cell'}>PW</span>
