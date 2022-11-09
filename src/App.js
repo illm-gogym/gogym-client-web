@@ -17,7 +17,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<>
-				<Router>
+				<Router basename={process.env.PUBLIC_URL}>
 					<Route exact path='/' component={Home} />
 					<Route path='/join' component={Join} />
 					<Route path='/register' component={Register} />
