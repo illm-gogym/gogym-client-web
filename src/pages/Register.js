@@ -54,32 +54,35 @@ class Home extends React.Component {
 	}
 
 	onSubmit = () => {
+		this.setUserinfoApi();
+	}
+
+	setUserinfoApi = () => {
 		try{
 			let userInfo = JSON.parse(JSON.stringify(this.state.userInfo));
-
-			axios.post("http://146.56.45.3:8080/api/auth/user/signup" , JSON.stringify(userInfo), {
+			const requestOption ={
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'Cache-Control': 'no-cache',
 					'Accept': 'application/json'
-				}})
+				}
+			};
+
+			axios.post("http://146.56.45.3:8080/api/auth/user/signup" , JSON.stringify(userInfo), requestOption )
 				.then(res =>{
-					// console.log("res.data.accessToken : " + res.data);
-					// axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
 					const resData = JSON.parse(JSON.stringify(res.data));
 					console.log(resData);
-					console.log('ins_dtm :' + resData.data.ins_dtm);
-					console.log('upd_dtm :' + resData.data.upd_dtm);
 					this.openModal();
 				})
 				.catch(ex=>{
 					console.log("login requset fail : " + ex);
+					alert('입력 값을 확인해주세요.');
 				})
 				.finally(()=>{console.log("login request end")});
-			}catch(e){
-				console.log(e);
-			}
+		}catch(e){
+			console.log(e);
+		}
 	}
 
 	validate = () => {

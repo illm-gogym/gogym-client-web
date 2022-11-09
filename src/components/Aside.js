@@ -107,6 +107,10 @@ class Aside extends React.Component {
 									{value.icon}
 									{value.title}
 								</Link>
+								{/*<span className={'link'}>*/}
+									{/*{value.icon}*/}
+									{/*{value.title}*/}
+								{/*</span>*/}
 							</li>
 						)}
 					</ul>

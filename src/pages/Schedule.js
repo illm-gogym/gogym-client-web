@@ -75,9 +75,12 @@ class Home extends React.Component {
 								<strong className={'title'}>10.20 일정 (5개)</strong>
 								<p className={'description'}>김문수, 라강민 님</p>
 							</div>
-							<Link to={'/register'} className={'btn_article'} >
+							<Link to={'/schedule'} className={'btn_article'} >
 								일정 확인하기
 							</Link>
+							{/*<span className={'btn_article'} >*/}
+								{/*일정 확인하기*/}
+							{/*</span>*/}
 						</div>
 					</div>
 

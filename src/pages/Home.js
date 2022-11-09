@@ -40,6 +40,9 @@ class Home extends React.Component {
 							<Link to={'/register'} className={'btn_article'} >
 								회원 등록하기
 							</Link>
+							{/*<span  className={'btn_article'} >*/}
+								{/*회원 등록하기*/}
+							{/*</span>*/}
 						</div>
 					</div>
 					<div className={'section'}>
