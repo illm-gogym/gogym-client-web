@@ -17,6 +17,29 @@ class Home extends React.Component {
 				{id:'10103', name: '라강민'},
 				{id:'10104', name: '이선아'},
 				{id:'10105', name: '조영은'},
+			],
+			memberList: [
+				{id:'20101', name: '한예슬'},
+				{id:'20102', name: '김태희'},
+				{id:'20103', name: '한가인'},
+				{id:'20104', name: '비'},
+				{id:'20105', name: '전지현'},
+			],
+			originTaskList: [
+				{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
+				{'date': '2022. 11. 01 12:20', 'member': '김태희'},
+				{'date': '2022. 11. 16 17:20', 'member': '비'},
+				{'date': '2022. 11. 25 06:20', 'member': '한가인'},
+				{'date': '2022. 11. 27 20:20', 'member': '전지현'},
+				{'date': '2022. 11. 28 06:20', 'member': '한가인'},
+			],
+			taskList: [
+				{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
+				{'date': '2022. 11. 01 12:20', 'member': '김태희'},
+				{'date': '2022. 11. 16 17:20', 'member': '비'},
+				{'date': '2022. 11. 25 06:20', 'member': '한가인'},
+				{'date': '2022. 11. 27 20:20', 'member': '전지현'},
+				{'date': '2022. 11. 28 06:20', 'member': '한가인'},
 			]
 		};
 	}
@@ -24,8 +47,21 @@ class Home extends React.Component {
 	componentDidMount() {
 	}
 
+	onSelectMember = (e) => {
+		var name = e.target.innerText;
+		var list = [];
+		this.state.originTaskList.map((value, index) => {
+			if(name === value.member )
+				list.push(value);
+		})
+		this.setState({
+			...this.state,
+			taskList: list,
+		})
+	}
+
 	render() {
-		const {trainerList} = this.state;
+		const {trainerList, memberList, taskList} = this.state;
 		return (
 			<div id={'wrap'} className={classNames('schedule_wrap')}>
 				<Aside link={'schedule'}/>
@@ -51,16 +87,28 @@ class Home extends React.Component {
 								<input type="radio" id={'part_trainer'} name={'check'} checked={true} />
 								<label htmlFor="part_trainer">트레이너</label>
 							</div>
+							<div className={'list_area'}>
+								<ul className={'trainer_list'}>
+									{trainerList.map((value, index) =>
+										<li className={'item'}>
+											<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
+											<label htmlFor={`${value.id}--${index}`} className={'input_label'}>
+												<span className={'text'}>{value.name}</span>
+											</label>
+										</li>
+									)}
+								</ul>
+							</div>
 							<div className={'tab'}>
 								<input type="radio" id={'part_member'}  name={'check'} />
 								<label htmlFor="part_member">회원</label>
 							</div>
 							<div className={'list_area'}>
-								<ul className={'trainer_list'}>
-									{trainerList.map((value, index) =>
+								<ul className={classNames('trainer_list', 'member')}>
+									{memberList.map((value, index) =>
 										<li className={'item'}>
-											<input type="checkbox" id={`${value.id}--${index}`} className={'input_check'}/>
-											<label htmlFor={`${value.id}--${index}`} className={'input_label'}>
+											<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
+											<label htmlFor={`${value.id}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
 												<span className={'text'}>{value.name}</span>
 											</label>
 										</li>
@@ -71,7 +119,7 @@ class Home extends React.Component {
 					</div>
 
 					<div className={'section'}>
-						<Calenders />
+						<Calenders taskList={taskList} />
 					</div>
 				</div>
 			</div>

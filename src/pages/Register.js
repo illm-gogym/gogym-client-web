@@ -14,10 +14,13 @@ class Home extends React.Component {
 			modalOpen: false,
 			userInfo: {
 				birth: '',
+				gender: 'Man',
 				name: '',
+				password: 'test1234',
 				phone: '',
-				address: '',
-				ticket: '',
+				role: 'ROLE_ADMIN',
+				// address: '',
+				// ticket: '',
 			},
 			submitDisabled: true,
 		}
@@ -51,24 +54,32 @@ class Home extends React.Component {
 	}
 
 	onSubmit = () => {
-		this.openModal();
+		try{
+			let userInfo = JSON.parse(JSON.stringify(this.state.userInfo));
 
-		var data = JSON.stringify(this.state.userInfo);
-
-		const requestOptions = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: data
-		};
-
-		fetch('api/userJoin', requestOptions)
-			.then(response => response.json())
-			.then(data => console.log(data));
-
-		// fetch('http://146.56.45.3:8080/api/auth/user/signup', requestOptions)
-		// 	.then(response => response.json())
-		// 	.then(data => console.log(data));
-
+			axios.post("http://146.56.45.3:8080/api/auth/user/signup" , JSON.stringify(userInfo), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json'
+				}})
+				.then(res =>{
+					// console.log("res.data.accessToken : " + res.data);
+					// axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
+					const resData = JSON.parse(JSON.stringify(res.data));
+					console.log(resData);
+					console.log('ins_dtm :' + resData.data.ins_dtm);
+					console.log('upd_dtm :' + resData.data.upd_dtm);
+					this.openModal();
+				})
+				.catch(ex=>{
+					console.log("login requset fail : " + ex);
+				})
+				.finally(()=>{console.log("login request end")});
+			}catch(e){
+				console.log(e);
+			}
 	}
 
 	validate = () => {
@@ -92,27 +103,27 @@ class Home extends React.Component {
 						<h2>회원 등록</h2>
 					</div>
 
-					<form className="form_area">
+					<form className="form_area" autoComplete={'on'}>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'이름을 입력해 주세요'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate}  name={'name'}/>
+							<input type="text" className={'form_input'} placeholder={'이름을 입력해 주세요'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate}  name={'name'}/>
 							<label className={'form_label'}>이름</label>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'생년월일을 입력해 주세요'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'birth'}/>
+							<input type="text" className={'form_input'} placeholder={'생년월일을 입력해 주세요'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'birth'}/>
 							<label className={'form_label'}>생년월일</label>
 							<p className={'form_detail'}>예) 1992.02.28</p>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'01012345678'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'phone'}/>
+							<input type="text" className={'form_input'} placeholder={'01012345678'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'phone'}/>
 							<label className={'form_label'}>전화번호</label>
 							<p className={'form_detail'}>‘-’ 없이 입력해 주세요 </p>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'주소를 입력해 주세요'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'address'}/>
+							<input type="text" className={'form_input'} placeholder={'주소를 입력해 주세요'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'password'}/>
 							<label className={'form_label'}>주소</label>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'0'} required={'true'} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'ticket'}/>
+							<input type="text" className={'form_input'} placeholder={'0'} required={true} onKeyUp={this.validate} name={'ticket'}/>
 							<label className={'form_label'}>수강권 (횟수)</label>
 							<p className={'form_detail'}>안내문구 작성하기</p>
 						</div>

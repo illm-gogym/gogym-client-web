@@ -4,8 +4,6 @@
 		border: 1px solid #E1E1E1;
 	}
 	.tab {
-		display: inline-block;
-		width: 50%;
 
 		input {
 			@include blind;
@@ -31,6 +29,12 @@
 	.trainer_list {
 		@include clearfix;
 		margin-top: -14px;
+
+		&.member {
+			.input_label {
+				color: #D694F4;
+			}
+		}
 
 		.item {
 			float: left;

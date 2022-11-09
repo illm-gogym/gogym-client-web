@@ -4,21 +4,10 @@ import React from "react";
 
 import Modal from 'components/Modal';
 
-function Calenders() {
+function Calenders({taskList}) {
 	const [date, setDate] = useState(new Date());
-	const taskList = [
-		{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
-		{'date': '2022. 11. 01 12:20', 'member': '김태희'},
-		{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
-		{'date': '2022. 11. 01 12:20', 'member': '김태희'},
-		{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
-		{'date': '2022. 11. 01 12:20', 'member': '김태희'},
-		{'date': '2022. 11. 16 17:20', 'member': '비'},
-		{'date': '2022. 11. 25 06:20', 'member': '한가인'},
-		{'date': '2022. 11. 27 20:20', 'member': '전지현'},
-	];
-
 	const [dayList, setDayList] = useState([]);
+	const [schedule, setSchedule] = useState({name:'', time:''});
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const openModal = () => {
@@ -26,6 +15,14 @@ function Calenders() {
 	};
 	const closeModal = () => {
 		setModalOpen(false);
+	};
+
+	const [modifyModalOpen, setModifyModalOpen] = useState(false);
+	const openModifyModal = () => {
+		setModifyModalOpen(true);
+	};
+	const closeModifyModal = () => {
+		setModifyModalOpen(false);
 	};
 
 	const onClickDay = (value, event) => {
@@ -66,18 +63,12 @@ function Calenders() {
 		return <span className={'task_area'}>{taskArr.map((value, index) =>
 			value !== undefined ? <span className={'task'}>{value.member} {value.time}</span> : null
 		)}</span>
-
-		// return taskList.map((value, index) => {
-		// 	var currentDate = new Date(value.date);
-		// 	if(date.getMonth() === currentDate.getMonth() && date.getDate() === currentDate.getDate() ) {
-		// 		return value.member;
-		// 	} else {
-		// 		return null;
-		// 	}
-		// }).map((value, index) =>
-		// 	<span className={'task'}>{value}</span>
-		// );
 	};
+
+	const modifySchedule = (e) => {
+		console.log(e);
+		openModifyModal();
+	}
 
 	return (
 		<>
@@ -104,10 +95,17 @@ function Calenders() {
 							<span className={'text'}>
 								<strong>{value.time}</strong> {value.member} 님
 							</span>
-							<button type={'button'} className={'btn_manage'}>회원관리</button>
+							<button type={'button'} className={'btn_manage'} onClick={(e)=>modifySchedule(e)}>일정수정</button>
 						</li>
 					)}
 				</ul>
+			</Modal>
+
+			<Modal open={modifyModalOpen} close={closeModifyModal} header="일정 관리">
+				<div>
+					회원 :
+					날짜 :
+				</div>
 			</Modal>
 		</>
 	);

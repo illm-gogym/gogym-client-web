@@ -40,6 +40,7 @@
 			border-radius: 2px;
 			box-sizing: border-box;
 			outline: none;
+			-webkit-appearance: none;
 
 			@include placeholder();
 
