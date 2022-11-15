@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import Home from './pages/Home';
+import Home from 'pages/Home';
 import Join from 'pages/Join';
 import Register from 'pages/Register';
 import Schedule from 'pages/Schedule';
@@ -9,22 +9,20 @@ import Schedule from 'pages/Schedule';
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			username: null
-		};
 	}
 
 	render() {
 		return (
 			<>
-				<Router basename={process.env.PUBLIC_URL}>
-					<Switch>
-						<Route exact path={`/`} component={Home} />
-						<Route path={`/join`} component={Join} />
-						<Route path={`/register`} component={Register} />
-						<Route path={`/schedule`} component={Schedule} />
-					</Switch>
-				</Router>
+				{/*<Schedule />*/}
+				<BrowserRouter basename={process.env.PUBLIC_URL}>
+					<Routes>
+						<Route exact path={`/`} element={<Home/>} />
+						<Route path={`/join`} element={<Join/>} />
+						<Route path={`/register`} element={<Register/>} />
+						<Route path={`/schedule`} element={<Schedule/>} />
+					</Routes>
+				</BrowserRouter>
 			</>
 		);
 	}

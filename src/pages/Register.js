@@ -57,7 +57,32 @@ class Home extends React.Component {
 		this.setUserinfoApi();
 	}
 
-	setUserinfoApi = () => {
+	getUserinfoApi = async () => {
+		try{
+			const requestOption ={
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json'
+				}
+			};
+			await axios.post("http://146.56.45.3:8080/api/auth/user/all" , requestOption )
+				.then(res =>{
+					const resData = JSON.parse(JSON.stringify(res.data));
+					console.log(resData);
+					this.openModal();
+				})
+				.catch(ex=>{
+					console.log("login requset fail : " + ex);
+				})
+				.finally(()=>{console.log("login request end")});
+		}catch(e){
+			console.log(e);
+		}
+	}
+
+	setUserinfoApi = async () => {
 		try{
 			let userInfo = JSON.parse(JSON.stringify(this.state.userInfo));
 			const requestOption ={
@@ -69,7 +94,8 @@ class Home extends React.Component {
 				}
 			};
 
-			axios.post("http://146.56.45.3:8080/api/auth/user/signup" , JSON.stringify(userInfo), requestOption )
+			await axios.post("http://146.56.45.3:8080/api/auth/user/signup" ,
+				JSON.stringify(userInfo), requestOption )
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
 					console.log(resData);
@@ -103,7 +129,7 @@ class Home extends React.Component {
 				<Aside link={'register'}/>
 				<div className="container">
 					<div className={'notify_area'}>
-						<h2>회원 등록</h2>
+						<h2 onClick={this.getUserinfoApi}>회원 등록</h2>
 					</div>
 
 					<form className="form_area" autoComplete={'on'}>

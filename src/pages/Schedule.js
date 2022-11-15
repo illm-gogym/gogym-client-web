@@ -64,7 +64,7 @@ class Home extends React.Component {
 		const {trainerList, memberList, taskList} = this.state;
 		return (
 			<div id={'wrap'} className={classNames('schedule_wrap')}>
-				<Aside link={'schedule'}/>
+				<Aside link={'/schedule'}/>
 				<div className="container">
 					<div className={'notify_area'}>
 						<h2>스케줄 관리</h2>

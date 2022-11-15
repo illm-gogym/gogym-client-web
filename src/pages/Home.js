@@ -25,7 +25,7 @@ class Home extends React.Component {
 		const {memberList} = this.state;
 		return (
 			<div id={'wrap'} className={classNames('home_wrap')}>
-				<Aside link={''}/>
+				<Aside link={'/'}/>
 				<div className="container">
 					<h2 className={'blind'}>회원 관리</h2>
 					<div className={'notify_area'}>
