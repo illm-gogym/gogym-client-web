@@ -6,19 +6,21 @@
 			align-items: center;
 			height: 40px;
 			margin-top: 10px;
-
-			&::after {
-				content: '';
-				margin-left: auto;
-				width: 24px;
-				height: 24px;
-				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M8 16.58L12.58 12L8 7.41L9.41 6L15.41 12L9.41 18L8 16.58Z' fill='%23999999'/%3E%3C/svg%3E");
-			}
 		}
 
 		.date {
 			padding-left: 12px;
 			font-size: 11px;
+			color: #666;
+		}
+
+		.btn_edit {
+			padding: 0 14px;
+			margin-left: auto;
+			height: 26px;
+			border: 1px solid #D9D9D9;
+			border-radius: 2px;
+			font-size: 12px;
 			color: #666;
 		}
 

@@ -17,10 +17,12 @@ class App extends React.Component {
 				{/*<Schedule />*/}
 				<BrowserRouter basename={process.env.PUBLIC_URL}>
 					<Routes>
-						<Route exact path={`/`} element={<Home/>} />
-						<Route path={`/join`} element={<Join/>} />
-						<Route path={`/register`} element={<Register/>} />
-						<Route path={`/schedule`} element={<Schedule/>} />
+						<Route exact path={'/'} element={<Home/>} />
+						<Route path={'join'} element={<Join/>} />
+						<Route path={'register'} element={<Register/>} />
+						<Route path={'schedule'} element={<Schedule/>}>
+							<Route path={':personalType'} element={<Schedule/>} />
+						</Route>
 					</Routes>
 				</BrowserRouter>
 			</>

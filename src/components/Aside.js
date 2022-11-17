@@ -13,8 +13,14 @@ class Aside extends React.Component {
 				setImageSrc: '',
 			},
 			manageList: [
-				{title:'회원 관리', icon: <Icon.ic24TrendingUp/>, router: '/', active: true},
-				{title:'스케줄 관리', icon: <Icon.ic24Summery/>, router: '/schedule', active: false},
+				{
+					title:'스케줄', icon: <Icon.ic24Schedule/>, router: '/schedule', active: false,
+					subMenu: [
+						{title:'트레이너', router: '/schedule/trainer', active: false},
+						{title:'내 회원', router: '/schedule/member', active: false}
+					]
+				},
+				{title:'회원 정보 관리', icon: <Icon.ic24MemberManage/>, router: '/', active: true},
 			],
 		};
 
@@ -36,10 +42,6 @@ class Aside extends React.Component {
 			}
 		)
 	};
-
-	onClickManage = (e) => {
-
-	}
 
 	encodeFileToBase64 = (fileBlob) => {
 		const reader = new FileReader();
@@ -95,7 +97,7 @@ class Aside extends React.Component {
 				<div className={'aside_content'}>
 					<ul className={'menage_list'}>
 						{manageList.map((value, index) =>
-							<li key={`manage-${value.router}`} className={'item'} onClick={this.onClickManage}>
+							<li key={`manage-${value.router}`} className={'item'}>
 								<Link to={value.router}  className={classNames('link', {'active' : value.active} )}>
 									{value.icon}
 									{value.title}
@@ -104,6 +106,16 @@ class Aside extends React.Component {
 									{/*{value.icon}*/}
 									{/*{value.title}*/}
 								{/*</span>*/}
+
+								{ value.subMenu &&
+									<div className={'sub_area'}>
+										{value.subMenu.map((value, index) =>
+											<Link to={value.router}  className={classNames('sub_link', {'active' : value.active} )}>
+												{value.title}
+											</Link>
+										)}
+									</div>
+								}
 							</li>
 						)}
 					</ul>

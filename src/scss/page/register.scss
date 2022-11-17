@@ -42,6 +42,12 @@
 			outline: none;
 			-webkit-appearance: none;
 
+			&::-webkit-outer-spin-button,
+			&::-webkit-inner-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+
 			@include placeholder();
 
 			&:required {

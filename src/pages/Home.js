@@ -52,6 +52,7 @@ class Home extends React.Component {
 								<li key={`hash--${value.id}`} className={'item'}>
 									<strong>{value.name}</strong>
 									<span className={'date'}>{value.date}</span>
+									<button type={'button'} className={'btn_edit'}>정보 수정</button>
 								</li>
 							)}
 						</ul>
