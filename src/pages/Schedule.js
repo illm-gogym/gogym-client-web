@@ -8,6 +8,7 @@ import Modal from "components/Modal";
 import Calenders from 'components/Calendars';
 
 import { useParams } from "react-router-dom";
+import { nanoid } from 'nanoid';
 
 function withParams(Component) {
 	return props => <Component {...props} params={useParams()} />;
@@ -19,6 +20,8 @@ class Schedule extends React.Component {
 
 		this.state = {
 			modalOpen: false,
+			selectCard: false,
+			selectCardIndex: -1,
 			trainerList: [
 				{id:'10101', name: '김동수'},
 				{id:'10102', name: '김문수'},
@@ -34,20 +37,20 @@ class Schedule extends React.Component {
 				{id:'20105', name: '전지현'},
 			],
 			originTaskList: [
-				{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
-				{'date': '2022. 11. 01 12:20', 'member': '김태희'},
-				{'date': '2022. 11. 16 17:20', 'member': '비'},
-				{'date': '2022. 11. 25 06:20', 'member': '한가인'},
-				{'date': '2022. 11. 27 20:20', 'member': '전지현'},
-				{'date': '2022. 11. 28 06:20', 'member': '한가인'},
+				{'date': '2022. 11. 01 09:20', 'name': '한예슬'},
+				{'date': '2022. 11. 01 12:20', 'name': '김태희'},
+				{'date': '2022. 11. 16 17:20', 'name': '비'},
+				{'date': '2022. 11. 25 06:20', 'name': '한가인'},
+				{'date': '2022. 11. 27 20:20', 'name': '전지현'},
+				{'date': '2022. 11. 28 06:20', 'name': '한가인'},
 			],
 			taskList: [
-				{'date': '2022. 11. 01 09:20', 'member': '한예슬'},
-				{'date': '2022. 11. 01 12:20', 'member': '김태희'},
-				{'date': '2022. 11. 16 17:20', 'member': '비'},
-				{'date': '2022. 11. 25 06:20', 'member': '한가인'},
-				{'date': '2022. 11. 27 20:20', 'member': '전지현'},
-				{'date': '2022. 11. 28 06:20', 'member': '한가인'},
+				{'date': '2022. 11. 01 09:20', 'name': '한예슬'},
+				{'date': '2022. 11. 01 12:20', 'name': '김태희'},
+				{'date': '2022. 11. 16 17:20', 'name': '비'},
+				{'date': '2022. 11. 25 06:20', 'name': '한가인'},
+				{'date': '2022. 11. 27 20:20', 'name': '전지현'},
+				{'date': '2022. 11. 28 06:20', 'name': '한가인'},
 			],
 			addScheduleList: [],
 			addSchedule: {
@@ -68,18 +71,34 @@ class Schedule extends React.Component {
 
 	closeModal = () => {
 		this.setState({
-			modalOpen: false
+			modalOpen: false,
+			originTaskList: [
+				...this.state.originTaskList,
+				...this.makeOriginData(),
+			],
+			taskList: [
+				...this.state.taskList,
+				...this.makeOriginData(),
+			]
 		});
 
+	};
+
+	makeOriginData = () => {
+		var list = [];
+		this.state.addScheduleList.map((value, index)=> {
+			var newDate = new Date(`${value.date} ${value.startTime}`);
+			list.push({name: value.name, date: newDate});
+		})
 
 		this.setState({
 			addScheduleList : []
 		})
-	};
+		return list;
+	}
 
 	componentDidMount() {
 		const { personalType } = this.props.params;
-		console.log(personalType);
 		this.setState({
 			personalType: personalType,
 		});
@@ -89,7 +108,7 @@ class Schedule extends React.Component {
 		var name = e.target.innerText;
 		var list = [];
 		this.state.originTaskList.map((value, index) => {
-			if(name === value.member )
+			if(name === value.name )
 				list.push(value);
 		})
 		this.setState({
@@ -113,12 +132,8 @@ class Schedule extends React.Component {
 		})
 	}
 
-	onSubmit = () => {
+	onCardReset = () => {
 		this.setState({
-			addScheduleList: [
-				...this.state.addScheduleList,
-				this.state.addSchedule,
-			],
 			addSchedule: {
 				name: '',
 				date: '',
@@ -129,8 +144,58 @@ class Schedule extends React.Component {
 		})
 	}
 
+	onClickCard = (e, index) => {
+		var data = this.state.addScheduleList[index];
+
+		this.setState({
+			selectCard: true,
+			selectCardIndex: index,
+			addSchedule: {
+				name: data.name,
+				date: data.date,
+				startTime: data.startTime,
+				endTime: data.endTime,
+				description: data.description
+			},
+		})
+	}
+
+	onSubmit = () => {
+		this.setState({
+			addScheduleList: [
+				...this.state.addScheduleList,
+				this.state.addSchedule,
+			],
+		})
+		this.onCardReset();
+	}
+
+	onModify = () => {
+		var tempList = this.state.addScheduleList;
+		tempList.splice(this.state.selectCardIndex, 1, this.state.addSchedule);
+
+		this.setState({
+			addScheduleList: [
+				...tempList
+			],
+			selectCardIndex: -1,
+		})
+		this.onCardReset();
+	}
+
+	onRemoveCard = (e, index) => {
+		var tempList = this.state.addScheduleList;
+		tempList.splice(index, 1);
+
+		this.setState({
+			addScheduleList : [
+				...tempList
+			]
+		})
+	}
+
 	render() {
-		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule} = this.state;
+		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule, selectCard} = this.state;
 		const { personalType } = this.props.params;
 		var personalList = personalType === 'member' ? memberList : trainerList;
 		return (
@@ -169,18 +234,20 @@ class Schedule extends React.Component {
 				</div>
 
 				<Modal open={modalOpen} close={this.closeModal} header="일정 추가하기" submit={`일정 ${addScheduleList.length}개 추가하기`}>
-					<div className="schedule_add_area">
+					<div className={'schedule_add_area'}>
 						<div className={'plus_area'}>
-							<button type={'button'} className={'btn_plus'}><Icon.ic24Plus/></button>
+							<button type={'button'} className={'btn_plus'} onClick={this.onCardReset}><Icon.ic24Plus/></button>
 							<ul className={'plus_list'}>
 								{addScheduleList.map((value, index) =>
 									<li className={'item'}>
-										<div className={'text'}>{value.date}</div>
-										<div className={'text'}>
-											{value.startTime}~{value.endTime}
+										<div className={'inner'} key={nanoid()} onClick={(e) => this.onClickCard(e, index)}>
+											<div className={'text'}>{value.date}</div>
+											<div className={'text'}>
+												{value.startTime}~{value.endTime}
+											</div>
+											<div className={'text'}>{value.name}</div>
 										</div>
-										<div className={'text'}>{value.name}</div>
-										<button> </button>
+										<button type={'button'} className={'btn_delete'}  onClick={(e) => this.onRemoveCard(e, index)}><Icon.ic14Close/></button>
 									</li>
 								)}
 							</ul>
@@ -200,7 +267,10 @@ class Schedule extends React.Component {
 						<div className={'plus_input_area'}>
 							<label htmlFor="plus_description">설명</label> <textarea id={'plus_description'} className={'input'} rows={'4'} onChange={(e) =>this.onInputChange(e)} name={'description'} value={addSchedule.description}/>
 						</div>
-						<button className={'btn_add'} type={'button'} onClick={this.onSubmit}>등록하기</button>
+						{selectCard ?
+							<button className={'btn_add'} type={'button'} onClick={this.onModify}>수정하기</button>
+							: <button className={'btn_add'} type={'button'} onClick={this.onSubmit}>등록하기</button>
+						}
 					</div>
 				</Modal>
 			</div>

@@ -35,7 +35,7 @@ function Calenders({taskList}) {
 				time = dateSplitTime(new Date(value.date));
 			if(day === clickDay) {
 				setDayList((prevState) => {
-					return [{'member': value.member, 'time': time}, ...prevState];
+					return [{'name': value.name, 'time': time}, ...prevState];
 				})
 			}
 		});
@@ -56,12 +56,12 @@ function Calenders({taskList}) {
 			var currentDate = new Date(value.date);
 			var options = { hour: "numeric", minute: "numeric", hour12: false };
 			if(date.getMonth() === currentDate.getMonth() && date.getDate() === currentDate.getDate() ) {
-				return { member:value.member, time: currentDate.toLocaleTimeString("en-US", options)} ;
+				return { name:value.name, time: currentDate.toLocaleTimeString("en-US", options)} ;
 			}
 		});
 
 		return <span className={'task_area'}>{taskArr.map((value, index) =>
-			value !== undefined ? <span className={'task'}>{value.member} {value.time}</span> : null
+			value !== undefined ? <span className={'task'}>{value.name} {value.time}</span> : null
 		)}</span>
 	};
 
@@ -93,7 +93,7 @@ function Calenders({taskList}) {
 					{dayList.map((value, index) =>
 						<li className={'item'}>
 							<span className={'text'}>
-								<strong>{value.time}</strong> {value.member} 님
+								<strong>{value.time}</strong> {value.name} 님
 							</span>
 							<button type={'button'} className={'btn_manage'} onClick={(e)=>modifySchedule(e)}>일정수정</button>
 						</li>

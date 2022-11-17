@@ -225,13 +225,18 @@
 
 .modal {
 	.schedule_add_area {
+		&.select_card {
+
+		}
+
 		.plus_area {
 			margin: 0 -16px 20px;
-			padding: 12px 16px;
+			padding: 12px 0 12px 16px;
 			background: #F5F5F5;
 
 			@include clearfix;
 		}
+
 		.btn_plus {
 			float: left;
 			width: 76px;
@@ -247,9 +252,11 @@
 			white-space: nowrap;
 
 			.item {
+				position: relative;
 				display: inline-block;
 				width: 157px;
 				height: 76px;
+				margin-right: 8px;
 				padding: 11px 8px;
 				font-size: 12px;
 				line-height: 14px;
@@ -260,8 +267,15 @@
 
 				.text {
 					& ~ .text {
-						margin-top: 6px;
+						margin-top: 5px;
 					}
+				}
+
+				.btn_delete {
+					position: absolute;
+					top: 8px;
+					right: 8px;
+					line-height: 0;
 				}
 			}
 		}

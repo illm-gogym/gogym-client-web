@@ -15,6 +15,7 @@ import { ReactComponent as ic24MemberManage } from "asset/svg/ic24-member-manage
 import { ReactComponent as ic24Schedule } from "asset/svg/ic24-schedule.svg";
 import { ReactComponent as ic20BulletArrow } from "asset/svg/ic20-bullet-arrow.svg";
 import { ReactComponent as ic24Plus } from "asset/svg/ic24-plus.svg";
+import { ReactComponent as ic14Close } from "asset/svg/ic14-close.svg";
 
 export const Icon = {
 	'logoAdmin' : logoAdmin,
@@ -34,4 +35,5 @@ export const Icon = {
 	'ic24Schedule' : ic24Schedule,
 	'ic20BulletArrow' : ic20BulletArrow,
 	'ic24Plus' : ic24Plus,
+	'ic14Close' : ic14Close,
 }
