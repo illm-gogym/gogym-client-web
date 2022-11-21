@@ -104,11 +104,13 @@
 }
 
 .calender_wrap {
+	position: relative;
 	margin-top: 24px;
 
 	.btn_add {
-		display: block;
-		margin-left: auto;
+		position: absolute;
+		top: 0;
+		right: 0;
 		color: #25AAF5;
 		height: 32px;
 		padding: 0 14px;
@@ -319,6 +321,7 @@
 				}
 			}
 		}
+
 		.btn_add {
 			margin-top: 16px;
 			width: 100%;

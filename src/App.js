@@ -5,6 +5,7 @@ import Home from 'pages/Home';
 import Join from 'pages/Join';
 import Register from 'pages/Register';
 import Schedule from 'pages/Schedule';
+import Login from 'pages/Login';
 
 class App extends React.Component {
 	constructor(props) {
@@ -19,6 +20,7 @@ class App extends React.Component {
 					<Routes>
 						<Route exact path={'/'} element={<Home/>} />
 						<Route path={'join'} element={<Join/>} />
+						<Route path={'login'} element={<Login/>} />
 						<Route path={'register'} element={<Register/>} />
 						<Route path={'schedule'} element={<Schedule/>}>
 							<Route path={':personalType'} element={<Schedule/>} />

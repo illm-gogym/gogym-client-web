@@ -20,7 +20,7 @@ class Aside extends React.Component {
 						{title:'내 회원', router: '/schedule/member', active: false}
 					]
 				},
-				{title:'회원 정보 관리', icon: <Icon.ic24MemberManage/>, router: '/', active: true},
+				{title:'회원 관리', icon: <Icon.ic24MemberManage/>, router: '/', active: true},
 			],
 		};
 

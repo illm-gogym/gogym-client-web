@@ -15,14 +15,14 @@ class Home extends React.Component {
 			userInfo: {
 				birth: '',
 				gender: 'Man',
-				gym_id: 1001,
+				gym_id: 1002,
 				name: '',
 				password: 'test1234',
 				phone: '',
-				role: 'ROLE_USER',
+				role: 'ROLE_ADMIN',
 				remaining: 0,
-				total: '',
-				trainerId: 'bellgym',
+				total: 0,
+				trainer_id: 'helloGym',
 				until: "2022-12-31"
 			},
 			submitDisabled: true,
@@ -51,38 +51,13 @@ class Home extends React.Component {
 			...this.state,
 			userInfo: {
 				...this.state.userInfo,
-				[target.name]: target.value
+				[target.name]: target.name === 'total' ? parseInt(target.value) : target.value,
 			}
 		});
 	}
 
 	onSubmit = () => {
 		this.setUserinfoApi();
-	}
-
-	getUserinfoApi = async () => {
-		try{
-			const requestOption ={
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Cache-Control': 'no-cache',
-					'Accept': 'application/json'
-				}
-			};
-			await axios.post("http://146.56.45.3:8080/api/auth/user/all" , requestOption )
-				.then(res =>{
-					const resData = JSON.parse(JSON.stringify(res.data));
-					console.log(resData);
-					this.openModal();
-				})
-				.catch(ex=>{
-					console.log("login requset fail : " + ex);
-				})
-				.finally(()=>{console.log("login request end")});
-		}catch(e){
-			console.log(e);
-		}
 	}
 
 	setUserinfoApi = async () => {
@@ -97,18 +72,20 @@ class Home extends React.Component {
 					'Accept': 'application/json'
 				}
 			};
-
-			await axios.post("http://146.56.45.3:8080/api/auth/user/signup" ,
+			await axios.post("http://3.35.226.16:8080/api/auth/user/signup" ,
 				JSON.stringify(userInfo), requestOption )
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
+					const { accessToken } = res.data;
 					console.log(resData);
-					console.log("res.data.accessToken : " + resData.data);
+					// axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
+
+					// API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+					axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 					this.openModal();
 				})
 				.catch(ex=>{
 					console.log("login requset fail : " + ex);
-					alert('입력 값을 확인해주세요.');
 				})
 				.finally(()=>{console.log("login request end")});
 		}catch(e){

@@ -6,9 +6,11 @@ import 'react-calendar/dist/Calendar.css';
 import Aside from 'components/Aside';
 import Modal from "components/Modal";
 import Calenders from 'components/Calendars';
+import WeekCalenders from 'components/WeekCalenders';
 
 import { useParams } from "react-router-dom";
 import { nanoid } from 'nanoid';
+import axios from "axios";
 
 function withParams(Component) {
 	return props => <Component {...props} params={useParams()} />;
@@ -60,6 +62,9 @@ class Schedule extends React.Component {
 				endTime: null,
 				description: null
 			},
+			trainerId: {
+				trainer_id: "bellgym"
+			}
 		};
 	}
 
@@ -102,6 +107,9 @@ class Schedule extends React.Component {
 		this.setState({
 			personalType: personalType,
 		});
+
+		console.log(`Bearer ${localStorage.getItem('access-token')}`);
+		this.getUserInfoApi();
 	}
 
 	onSelectMember = (e) => {
@@ -179,6 +187,7 @@ class Schedule extends React.Component {
 				...tempList
 			],
 			selectCardIndex: -1,
+			selectCard: false,
 		})
 		this.onCardReset();
 	}
@@ -192,6 +201,34 @@ class Schedule extends React.Component {
 				...tempList
 			]
 		})
+	}
+
+	getUserInfoApi = async () => {
+		try{
+			let trainerId = this.state.trainerId;
+			const requestOption ={
+				params : trainerId,
+				headers: {
+					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+					// 'Authorization': `${localStorage.getItem('access-token')}`
+				},
+			};
+			await axios.get("http://3.35.226.16:8080/api/auth/trainer/userall", requestOption )
+				.then(res =>{
+					const accessToken = JSON.parse(JSON.stringify(res.data));
+					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
+					console.log(accessToken);
+				})
+				.catch(ex=>{
+					console.log("login requset fail : " + ex);
+				})
+				.finally(()=>{console.log("login request end")});
+		}catch(e){
+			console.log(e);
+		}
 	}
 
 	render() {
@@ -227,8 +264,12 @@ class Schedule extends React.Component {
 						</div>
 
 						<div className={'calender_wrap'}>
-							{personalType === 'member' && <button type={'button'} className={'btn_add'} onClick={(e) => this.onAddSchedule(e)}>일정 추가</button> }
-							<Calenders taskList={taskList} />
+							{personalType === 'member' ?
+								<>
+								<button type={'button'} className={'btn_add'} onClick={(e) => this.onAddSchedule(e)}>일정 추가</button>
+								<WeekCalenders taskList={taskList}  />
+								</> : <Calenders taskList={taskList} />
+							}
 						</div>
 					</div>
 				</div>
