@@ -31,28 +31,22 @@ class Schedule extends React.Component {
 				{id:'10104', name: '이선아'},
 				{id:'10105', name: '조영은'},
 			],
-			memberList: [
-				{id:'20101', name: '한예슬'},
-				{id:'20102', name: '김태희'},
-				{id:'20103', name: '한가인'},
-				{id:'20104', name: '비'},
-				{id:'20105', name: '전지현'},
-			],
+			memberList: [],
 			originTaskList: [
-				{'date': '2022. 11. 01 09:20', 'name': '한예슬'},
-				{'date': '2022. 11. 01 12:20', 'name': '김태희'},
-				{'date': '2022. 11. 16 17:20', 'name': '비'},
-				{'date': '2022. 11. 25 06:20', 'name': '한가인'},
-				{'date': '2022. 11. 27 20:20', 'name': '전지현'},
-				{'date': '2022. 11. 28 06:20', 'name': '한가인'},
+				{'date': '2022. 11. 21 09:00', 'name': '한예슬'},
+				{'date': '2022. 11. 21 12:00', 'name': '김태희'},
+				{'date': '2022. 11. 26 17:00', 'name': '비'},
+				{'date': '2022. 11. 25 11:00', 'name': '한가인'},
+				{'date': '2022. 11. 23 20:30', 'name': '전지현'},
+				{'date': '2022. 11. 24 10:30', 'name': '한가인'},
 			],
 			taskList: [
-				{'date': '2022. 11. 01 09:20', 'name': '한예슬'},
-				{'date': '2022. 11. 01 12:20', 'name': '김태희'},
-				{'date': '2022. 11. 16 17:20', 'name': '비'},
-				{'date': '2022. 11. 25 06:20', 'name': '한가인'},
-				{'date': '2022. 11. 27 20:20', 'name': '전지현'},
-				{'date': '2022. 11. 28 06:20', 'name': '한가인'},
+				{'date': '2022. 11. 21 09:00', 'name': '한예슬'},
+				{'date': '2022. 11. 21 12:00', 'name': '김태희'},
+				{'date': '2022. 11. 26 17:00', 'name': '비'},
+				{'date': '2022. 11. 25 11:00', 'name': '한가인'},
+				{'date': '2022. 11. 23 20:30', 'name': '전지현'},
+				{'date': '2022. 11. 24 10:30', 'name': '한가인'},
 			],
 			addScheduleList: [],
 			addSchedule: {
@@ -107,9 +101,7 @@ class Schedule extends React.Component {
 		this.setState({
 			personalType: personalType,
 		});
-
-		console.log(`Bearer ${localStorage.getItem('access-token')}`);
-		this.getUserInfoApi();
+		// this.getUserInfoApi();
 	}
 
 	onSelectMember = (e) => {
@@ -120,7 +112,6 @@ class Schedule extends React.Component {
 				list.push(value);
 		})
 		this.setState({
-			...this.state,
 			taskList: list,
 		})
 	}
@@ -218,9 +209,14 @@ class Schedule extends React.Component {
 			};
 			await axios.get("http://3.35.226.16:8080/api/auth/trainer/userall", requestOption )
 				.then(res =>{
-					const accessToken = JSON.parse(JSON.stringify(res.data));
+					const resData = JSON.parse(JSON.stringify(res.data));
 					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
-					console.log(accessToken);
+					console.log(resData);
+					this.setState({
+						memberList : [
+							...resData.data
+						]
+					})
 				})
 				.catch(ex=>{
 					console.log("login requset fail : " + ex);
@@ -234,7 +230,6 @@ class Schedule extends React.Component {
 	render() {
 		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule, selectCard} = this.state;
 		const { personalType } = this.props.params;
-		var personalList = personalType === 'member' ? memberList : trainerList;
 		return (
 			<div id={'wrap'} className={classNames('schedule_wrap')}>
 				<Aside link={'/schedule'}/>
@@ -251,25 +246,34 @@ class Schedule extends React.Component {
 							</div>
 							<div className={'list_area'}>
 								<ul className={'person_list'}>
-									{personalList.map((value, index) =>
-										<li className={'item'}>
-											<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
-											<label htmlFor={`${value.id}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
-												<span className={'text'}>{value.name}</span>
-											</label>
-										</li>
-									)}
+									{personalType === 'member' ?
+										memberList.map((value, index) =>
+											<li className={'item'}>
+												<input type="radio" id={`${value.ins_dtm}--${index}`} className={'input_check'} name={'member'}/>
+												<label htmlFor={`${value.ins_dtm}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
+													<span className={'text'}>{value.name}</span>
+												</label>
+											</li>
+										) :
+										trainerList.map((value, index) =>
+											<li className={'item'}>
+												<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
+												<label htmlFor={`${value.id}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
+													<span className={'text'}>{value.name}</span>
+												</label>
+											</li>
+										)
+									}
 								</ul>
 							</div>
 						</div>
 
 						<div className={'calender_wrap'}>
-							{personalType === 'member' ?
-								<>
+							{personalType === 'member' &&
 								<button type={'button'} className={'btn_add'} onClick={(e) => this.onAddSchedule(e)}>일정 추가</button>
-								<WeekCalenders taskList={taskList}  />
-								</> : <Calenders taskList={taskList} />
 							}
+							{/*<Calenders taskList={taskList} />*/}
+							<WeekCalenders taskList={taskList}  />
 						</div>
 					</div>
 				</div>
