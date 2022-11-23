@@ -2,6 +2,7 @@ import React from "react";
 
 import {Icon} from "asset/js/icon";
 import classNames from 'classnames';
+import {nanoid} from "nanoid";
 
 class WeekCalenders extends React.Component {
 	constructor(props) {
@@ -35,7 +36,6 @@ class WeekCalenders extends React.Component {
 	}
 
 	makeWeekArr = date => {
-		console.log(date);
 		let day = date.getDay();
 		let week = [];
 		for (let i = 0; i < 7; i++) {
@@ -72,7 +72,6 @@ class WeekCalenders extends React.Component {
 	}
 
 	timeOneBase = (date) => {
-		console.log(date);
 		let tempList = [];
 		for(let i=0; i<24; i++) {
 			tempList.push({date: new Date(date.setHours(date.getHours() + 1)), info: null});
@@ -80,11 +79,10 @@ class WeekCalenders extends React.Component {
 		const timeButton = tempList.map((value, index) =>
 			<div className={'base_day'}></div>
 		)
-		return <div className={'base_area'}>{timeButton}</div>
+		return <div className={'base_area'} key={nanoid()}>{timeButton}</div>
 	}
 
 	timeOneDay = (date) => {
-		console.log(date);
 		const taskList = this.props.taskList;
 		let newTaskList = [];
 		taskList.map((value, index) => {
@@ -100,12 +98,12 @@ class WeekCalenders extends React.Component {
 			<button type={'button'} className={classNames('btn_task', `time_${value.hour}`, {'half': value.time >= 30})}
 					onClick={(e) => this.onClickDay(e)}
 					value={`${value.date.toLocaleDateString()} ${value.hour} ${value.time}`}>
-				{value.name}
-				{value.hour}시 {value.time}분
+				{value.name} <br/>
+				({value.hour}:{value.time})
 			</button>
 		)
 
-		return <div className={'task_area'}>{timeButton}</div>
+		return <div className={'task_area'} key={nanoid()}>{timeButton}</div>
 	}
 
 	timeLeftDay = () => {
@@ -118,12 +116,11 @@ class WeekCalenders extends React.Component {
 				{value.time/12 < 1 || value.time/12 >= 2  ? '오전' : '오후'} {value.time%12 === 0 ? '12' : value.time%12}시
 			</span>
 		)
-		return <div className={'time_area'}>{timeButton}</div>
+		return <div className={'time_area'} key={nanoid()}>{timeButton}</div>
 	}
 
 	componentDidMount = () => {
 		this.makeCalender();
-		console.log(this.props.taskList);
 	};
 
 	componentDidUpdate(prevProps, prevState) {
@@ -146,7 +143,7 @@ class WeekCalenders extends React.Component {
 					{this.timeLeftDay()}
 					{week !== null && week.map((value, index) => {
 						return (
-							<div className={'day'}>
+							<div className={'day'} key={nanoid()}>
 								<div className={'main'}>
 									<span className={'text'}>{WEEKDAY[(value[1]).getDay()]}</span>
 									<em className={'num'}>{(value[1]).getDate()}</em>

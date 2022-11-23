@@ -5,7 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 
 import Aside from 'components/Aside';
 import Modal from "components/Modal";
-import Calenders from 'components/Calendars';
+// import Calenders from 'components/Calendars';
 import WeekCalenders from 'components/WeekCalenders';
 
 import { useParams } from "react-router-dom";
@@ -96,14 +96,6 @@ class Schedule extends React.Component {
 		return list;
 	}
 
-	componentDidMount() {
-		const { personalType } = this.props.params;
-		this.setState({
-			personalType: personalType,
-		});
-		// this.getUserInfoApi();
-	}
-
 	onSelectMember = (e) => {
 		var name = e.target.innerText;
 		var list = [];
@@ -129,6 +121,21 @@ class Schedule extends React.Component {
 				[target.name]: target.value
 			}
 		})
+
+		if(target.name === 'startTime') {
+
+			const time = e.target.value ;
+			console.log(time);
+			let now = new Date();
+			let date = new Date(`${now.getFullYear()} ${now.getMonth()} ${now.getDate()} ${time}`);
+
+			this.setState({
+				addSchedule : {
+					...this.state.addSchedule,
+					endTime: `${date.getHours() + 1}:${date.getMinutes()}`
+				}
+			})
+		}
 	}
 
 	onCardReset = () => {
@@ -196,7 +203,8 @@ class Schedule extends React.Component {
 
 	getUserInfoApi = async () => {
 		try{
-			let trainerId = this.state.trainerId;
+			// let trainerId = this.state.trainerId;
+			const trainerId = {trainer_id: localStorage.getItem('login-id')};
 			const requestOption ={
 				params : trainerId,
 				headers: {
@@ -211,7 +219,7 @@ class Schedule extends React.Component {
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
 					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
-					console.log(resData);
+					// console.log(resData);
 					this.setState({
 						memberList : [
 							...resData.data
@@ -225,6 +233,14 @@ class Schedule extends React.Component {
 		}catch(e){
 			console.log(e);
 		}
+	}
+
+	componentDidMount() {
+		const { personalType } = this.props.params;
+		this.setState({
+			personalType: personalType,
+		});
+		this.getUserInfoApi();
 	}
 
 	render() {
@@ -248,7 +264,7 @@ class Schedule extends React.Component {
 								<ul className={'person_list'}>
 									{personalType === 'member' ?
 										memberList.map((value, index) =>
-											<li className={'item'}>
+											<li className={'item'} key={nanoid()}>
 												<input type="radio" id={`${value.ins_dtm}--${index}`} className={'input_check'} name={'member'}/>
 												<label htmlFor={`${value.ins_dtm}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
 													<span className={'text'}>{value.name}</span>
@@ -256,7 +272,7 @@ class Schedule extends React.Component {
 											</li>
 										) :
 										trainerList.map((value, index) =>
-											<li className={'item'}>
+											<li className={'item'} key={nanoid()}>
 												<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
 												<label htmlFor={`${value.id}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
 													<span className={'text'}>{value.name}</span>
@@ -284,8 +300,8 @@ class Schedule extends React.Component {
 							<button type={'button'} className={'btn_plus'} onClick={this.onCardReset}><Icon.ic24Plus/></button>
 							<ul className={'plus_list'}>
 								{addScheduleList.map((value, index) =>
-									<li className={'item'}>
-										<div className={'inner'} key={nanoid()} onClick={(e) => this.onClickCard(e, index)}>
+									<li className={'item'} key={nanoid()} >
+										<div className={'inner'} onClick={(e) => this.onClickCard(e, index)}>
 											<div className={'text'}>{value.date}</div>
 											<div className={'text'}>
 												{value.startTime}~{value.endTime}
@@ -293,24 +309,25 @@ class Schedule extends React.Component {
 											<div className={'text'}>{value.name}</div>
 										</div>
 										<button type={'button'} className={'btn_delete'}  onClick={(e) => this.onRemoveCard(e, index)}><Icon.ic14Close/></button>
+										<button type={'button'}><Icon.ic14Copy/></button>
 									</li>
 								)}
 							</ul>
 						</div>
 						<div className={'plus_input_area'}>
-							<label htmlFor="plus_date">날짜</label> <input type="date" id={'plus_date'} onChange={(e) =>this.onInputChange(e)} className={'input'} name={'date'} value={addSchedule.date}/>
+							<label htmlFor="plus_date">날짜</label> <input type="date" id={'plus_date'} onChange={(e) =>this.onInputChange(e)} className={'input'} name={'date'} value={addSchedule.date || ''}/>
 						</div>
 						<div className={'plus_input_area'}>
-							<label htmlFor="plus_time">시간</label>
-							<input type="time" id={'plus_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'startTime'} value={addSchedule.startTime}/>
+							<label htmlFor="plus_start_time">시간</label>
+							<input type="time" id={'plus_start_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'startTime'} value={addSchedule.startTime || ''}/>
 							<span className={'dash'}>-</span>
-							<input type="time"  id={'plus_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'endTime'} value={addSchedule.endTime}/>
+							<input type="time" id={'plus_end_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'endTime'} value={addSchedule.endTime || ''}/>
 						</div>
 						<div className={'plus_input_area'}>
-							<label htmlFor="plus_member">회원</label> <input type="text" id={'plus_member'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'name'} value={addSchedule.name}/>
+							<label htmlFor="plus_member">회원</label> <input type="text" id={'plus_member'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'name'} value={addSchedule.name || ''}/>
 						</div>
 						<div className={'plus_input_area'}>
-							<label htmlFor="plus_description">설명</label> <textarea id={'plus_description'} className={'input'} rows={'4'} onChange={(e) =>this.onInputChange(e)} name={'description'} value={addSchedule.description}/>
+							<label htmlFor="plus_description">설명</label> <textarea id={'plus_description'} className={'input'} rows={'4'} onChange={(e) =>this.onInputChange(e)} name={'description'} value={addSchedule.description || ''}/>
 						</div>
 						{selectCard ?
 							<button className={'btn_add'} type={'button'} onClick={this.onModify}>수정하기</button>

@@ -6,6 +6,8 @@ import Modal from "components/Modal";
 
 import axios from 'axios';
 
+const trainerId = localStorage.getItem('login-id');
+
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
@@ -15,21 +17,18 @@ class Home extends React.Component {
 			userInfo: {
 				birth: '',
 				gender: 'Man',
-				gym_id: 1002,
+				gym_id: 1800,
 				name: '',
-				password: 'test1234',
+				password: '0',
 				phone: '',
-				role: 'ROLE_ADMIN',
+				role: 'ROLE_USER',
 				remaining: 0,
 				total: 0,
-				trainer_id: 'helloGym',
+				trainer_id: trainerId ? trainerId : '',
 				until: "2022-12-31"
 			},
 			submitDisabled: true,
 		}
-	}
-
-	componentDidMount() {
 	}
 
 	openModal = () => {
@@ -42,6 +41,8 @@ class Home extends React.Component {
 		this.setState({
 			modalOpen: false
 		});
+
+		this.setInputReset();
 	};
 
 	onInputChange = (e) => {
@@ -69,19 +70,16 @@ class Home extends React.Component {
 				headers: {
 					'Content-Type': 'application/json',
 					'Cache-Control': 'no-cache',
-					'Accept': 'application/json'
+					'Accept': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('access-token')}`,
 				}
 			};
 			await axios.post("http://3.35.226.16:8080/api/auth/user/signup" ,
 				JSON.stringify(userInfo), requestOption )
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
-					const { accessToken } = res.data;
+					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
 					console.log(resData);
-					// axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
-
-					// API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-					axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 					this.openModal();
 				})
 				.catch(ex=>{
@@ -101,6 +99,27 @@ class Home extends React.Component {
 				submitDisabled: false,
 			});
 		}
+	}
+
+	setInputReset = () => {
+		this.setState({
+			userInfo: {
+				birth: '',
+				gender: 'Man',
+				gym_id: 1800,
+				name: '',
+				password: '0',
+				phone: '',
+				role: 'ROLE_USER',
+				remaining: 0,
+				total: 0,
+				trainer_id: trainerId ? trainerId : '',
+				until: "2022-12-31"
+			}
+		});
+	}
+
+	componentDidMount() {
 	}
 
 	render() {

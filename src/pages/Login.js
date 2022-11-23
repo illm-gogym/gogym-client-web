@@ -37,6 +37,7 @@ class Login extends React.Component {
 					// API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
 					axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 					localStorage.setItem('login-id', loginInfo.trainerId);
+					alert('로그인 되었습니다.');
 				})
 				.catch(ex=>{
 					console.log("login requset fail : " + ex);

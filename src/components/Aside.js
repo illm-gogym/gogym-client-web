@@ -3,7 +3,7 @@ import {Icon} from "asset/js/icon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
 
-const trainderId = localStorage.getItem('login-id');
+const trainerId = localStorage.getItem('login-id');
 
 class Aside extends React.Component {
 	constructor(props) {
@@ -87,9 +87,10 @@ class Aside extends React.Component {
 
 						<div className={'information'}>
 							<div  className={classNames('name')}>
-								{centerName}
+								{/*{centerName}*/}
+								{trainerId || '로그인 해주세요.'}
 							</div>
-							<p className={'description'}>{trainderId || 'test trainer'}</p>
+							<p className={'description'}>{trainerId || '로그인 해주세요.'}</p>
 							<button type={'button'} className={'btn_setting'}>
 								<Icon.ic14Setting/> 계정설정
 							</button>
