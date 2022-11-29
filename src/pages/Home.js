@@ -3,22 +3,57 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import Aside from 'components/Aside';
+import axios from "axios";
 
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			memberList: [
-				{id: '221003', name: '김문수', date: '22.10.03', reservation: 1},
-				{id: '221001', name: '김동수', date: '22.10.01', reservation: 0},
-				{id: '220920', name: '라강민', date: '22.09.20', reservation: 0},
-				{id: '228010', name: '이선아', date: '22.08.10', reservation: 0}
+				// {id: '221003', name: '김문수', date: '22.10.03', reservation: 1},
+				// {id: '221001', name: '김동수', date: '22.10.01', reservation: 0},
+				// {id: '220920', name: '라강민', date: '22.09.20', reservation: 0},
+				// {id: '228010', name: '이선아', date: '22.08.10', reservation: 0}
 			]
 		}
 	}
 
-	componentDidMount() {
+	getUserInfoApi = async () => {
+		try{
+			// let trainerId = this.state.trainerId;
+			const trainerId = {trainer_id: localStorage.getItem('login-id')};
+			const requestOption ={
+				params : trainerId,
+				headers: {
+					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+					// 'Authorization': `${localStorage.getItem('access-token')}`
+				},
+			};
+			await axios.get("http://3.35.226.16:8080/api/auth/trainer/userall", requestOption )
+				.then(res =>{
+					const resData = JSON.parse(JSON.stringify(res.data));
+					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
+					// console.log(resData);
+					this.setState({
+						memberList : [
+							...resData.data
+						]
+					})
+				})
+				.catch(ex=>{
+					console.log("login requset fail : " + ex);
+				})
+				.finally(()=>{console.log("login request end")});
+		}catch(e){
+			console.log(e);
+		}
+	}
 
+	componentDidMount() {
+		this.getUserInfoApi();
 	}
 
 	render() {

@@ -115,24 +115,24 @@ class Schedule extends React.Component {
 	onInputChange = (e) => {
 		var target = e.target;
 
-		this.setState({
-			addSchedule : {
-				...this.state.addSchedule,
-				[target.name]: target.value
-			}
-		})
-
 		if(target.name === 'startTime') {
-
-			const time = e.target.value ;
-			console.log(time);
+			const time = e.target.value;
 			let now = new Date();
 			let date = new Date(`${now.getFullYear()} ${now.getMonth()} ${now.getDate()} ${time}`);
+			let endTime = `${date.getHours() + 1}:${date.getMinutes()}`;
 
 			this.setState({
 				addSchedule : {
 					...this.state.addSchedule,
-					endTime: `${date.getHours() + 1}:${date.getMinutes()}`
+					[target.name]: target.value,
+					endTime: endTime,
+				}
+			})
+		} else {
+			this.setState({
+				addSchedule : {
+					...this.state.addSchedule,
+					[target.name]: target.value,
 				}
 			})
 		}
@@ -155,6 +155,21 @@ class Schedule extends React.Component {
 
 		this.setState({
 			selectCard: true,
+			selectCardIndex: index,
+			addSchedule: {
+				name: data.name,
+				date: data.date,
+				startTime: data.startTime,
+				endTime: data.endTime,
+				description: data.description
+			},
+		})
+	}
+
+	onCopy = (e, index) => {
+		var data = this.state.addScheduleList[index];
+
+		this.setState({
 			selectCardIndex: index,
 			addSchedule: {
 				name: data.name,
@@ -246,6 +261,7 @@ class Schedule extends React.Component {
 	render() {
 		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule, selectCard} = this.state;
 		const { personalType } = this.props.params;
+		const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
 		return (
 			<div id={'wrap'} className={classNames('schedule_wrap')}>
 				<Aside link={'/schedule'}/>
@@ -302,14 +318,14 @@ class Schedule extends React.Component {
 								{addScheduleList.map((value, index) =>
 									<li className={'item'} key={nanoid()} >
 										<div className={'inner'} onClick={(e) => this.onClickCard(e, index)}>
-											<div className={'text'}>{value.date}</div>
+											<div className={'text'}>{value.name}</div>
+											<div className={'text'}>{value.date} {WEEKDAY[new Date(value.date).getDay()]} </div>
 											<div className={'text'}>
 												{value.startTime}~{value.endTime}
 											</div>
-											<div className={'text'}>{value.name}</div>
 										</div>
-										<button type={'button'} className={'btn_delete'}  onClick={(e) => this.onRemoveCard(e, index)}><Icon.ic14Close/></button>
-										<button type={'button'}><Icon.ic14Copy/></button>
+										<button type={'button'} className={'btn_delete'} onClick={(e) => this.onRemoveCard(e, index)}><Icon.ic14Close/></button>
+										<button type={'button'} className={'btn_copy'} onClick={(e) => this.onCopy(e, index)}><Icon.ic14Copy/></button>
 									</li>
 								)}
 							</ul>

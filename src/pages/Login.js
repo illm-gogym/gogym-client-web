@@ -73,8 +73,8 @@ class Login extends React.Component {
 				<p className={'description'}>PT 회원 예약 서비스 (관리자용)</p>
 				
 				<div className={'form'}>
-					<label htmlFor="form_email">이메일</label>
-					<input id={'form_email'} type="text" placeholder={'이메일 주소를 입력해 주세요'} name={'trainerId'} value={loginInfo.trainerId || ''} onChange={(e) =>this.onInputChange(e)}/>
+					<label htmlFor="form_email">아이디</label>
+					<input id={'form_email'} type="text" placeholder={'아이디를 입력해 주세요'} name={'trainerId'} value={loginInfo.trainerId || ''} onChange={(e) =>this.onInputChange(e)}/>
 				</div>
 
 				<div className={'form'}>

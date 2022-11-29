@@ -27,12 +27,54 @@
 	.week_content {
 		position: relative;
 		margin-top: 35px;
-		padding-left: $time-area-width;
 		@include clearfix;
+
+		.week_day_header {
+			position: relative;
+			padding-left: $time-area-width;
+			@include clearfix;
+
+			&::before {
+				content: '';
+				position: absolute;
+				bottom: -1px;
+				left: $time-area-width;
+				right: 0;
+				border-bottom: 1px solid #E1E1E1;
+			}
+
+			.main {
+				float: left;
+				width: 14.28%;
+				height: 70px;
+				text-align: center;
+
+				.text {
+					font-size: 10px;
+					line-height: 12px;
+				}
+
+				.num {
+					display: block;
+					margin-top: 8px;
+					font-size: 20px;
+					line-height: 24px;
+				}
+			}
+		}
+
+		.week_day_content {
+			position: relative;
+			max-height: 500px;
+			overflow: auto;
+			padding-left: $time-area-width;
+
+			@include clearfix;
+		}
 
 		.time_area {
 			position: absolute;
-			top: 65px;
+			top: -2px;
 			left: 0;
 			bottom: 0;
 			width: $time-area-width;
@@ -46,33 +88,15 @@
 			}
 		}
 
-		.day {
+		.day_area {
 			position: relative;
 			float: left;
 			width: 14.28%;
 			text-align: center;
-
-			.main {
-				height: 70px;
-			}
-
-			.text {
-				font-size: 10px;
-				line-height: 12px;
-			}
-
-			.num {
-				display: block;
-				margin-top: 8px;
-				font-size: 20px;
-				line-height: 24px;
-			}
 		}
 
 		.task_area {
 			@include absoluteFull;
-
-			top: 70px;
 
 			.btn_task {
 				position: absolute;

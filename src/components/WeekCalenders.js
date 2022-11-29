@@ -140,19 +140,27 @@ class WeekCalenders extends React.Component {
 					<button className={'btn_next'} onClick={this.onPressArrowRight}><Icon.ic20BulletArrow/></button>
 				</div>
 				<div className={'week_content'}>
-					{this.timeLeftDay()}
+					<div className={'week_day_header'}>
 					{week !== null && week.map((value, index) => {
 						return (
-							<div className={'day'} key={nanoid()}>
-								<div className={'main'}>
-									<span className={'text'}>{WEEKDAY[(value[1]).getDay()]}</span>
-									<em className={'num'}>{(value[1]).getDate()}</em>
-								</div>
-								{this.timeOneDay(value[1])}
-								{this.timeOneBase(value[1])}
+							<div className={'main'}>
+								<span className={'text'}>{WEEKDAY[(value[1]).getDay()]}</span>
+								<em className={'num'}>{(value[1]).getDate()}</em>
 							</div>
 						)
 					})}
+					</div>
+					<div className={'week_day_content'}>
+						{this.timeLeftDay()}
+						{week !== null && week.map((value, index) => {
+							return (
+								<div className={'day_area'}>
+									{this.timeOneDay(value[1])}
+									{this.timeOneBase(value[1])}
+								</div>
+							)
+						})}
+					</div>
 				</div>
 			</div>
 		)
