@@ -4,9 +4,13 @@
 @import "component/aside",
 		"component/container",
 		"component/modal",
-		"component/_weekCalender.scss";
+		"component/weekCalender",
+		"component/calenderWeekday";
 
 @import "page/join",
 		"page/home",
 		"page/register",
-		"page/schedule";
+		"page/schedule",
+		"page/manage";
+
+@import "page/User/userhome";

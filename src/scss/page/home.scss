@@ -1,11 +1,20 @@
 .home_wrap {
 	.member_list {
+		margin: 0 -20px;
+
 		.item {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			height: 40px;
-			margin-top: 10px;
+			a {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				height: 40px;
+				margin-top: 10px;
+				padding: 0 20px;
+			}
+
+			&:hover {
+				background-color: rgba(#E9F7FE, 0.8);
+			}
 		}
 
 		.date {
@@ -22,6 +31,10 @@
 			border-radius: 2px;
 			font-size: 12px;
 			color: #666;
+		}
+
+		.arrow {
+			margin-left: auto;
 		}
 
 		.reservation {

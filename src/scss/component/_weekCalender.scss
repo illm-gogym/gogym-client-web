@@ -49,16 +49,31 @@
 				height: 70px;
 				text-align: center;
 
+				&.today {
+					color: #25AAF5;
+
+					.num {
+						width: 32px;
+						height: 32px;
+						font-weight: 500;
+						color: #fff;
+						border-radius: 50%;
+						background-color: #25AAF5;
+					}
+				}
+
 				.text {
+					display: block;
 					font-size: 10px;
 					line-height: 12px;
 				}
 
 				.num {
-					display: block;
+					display: inline-block;
 					margin-top: 8px;
 					font-size: 20px;
-					line-height: 24px;
+					line-height: 32px;
+					vertical-align: top;
 				}
 			}
 		}

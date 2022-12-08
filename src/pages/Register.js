@@ -3,10 +3,9 @@ import classNames from 'classnames';
 
 import Aside from 'components/Aside';
 import Modal from "components/Modal";
+import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
 
 import axios from 'axios';
-
-const trainerId = localStorage.getItem('login-id');
 
 class Home extends React.Component {
 	constructor(props) {
@@ -24,7 +23,7 @@ class Home extends React.Component {
 				role: 'ROLE_USER',
 				remaining: 0,
 				total: 0,
-				trainer_id: trainerId ? trainerId : '',
+				trainer_id: getAuthTrainerId() ? getAuthTrainerId() : '',
 				until: "2022-12-31"
 			},
 			submitDisabled: true,
@@ -48,13 +47,33 @@ class Home extends React.Component {
 	onInputChange = (e) => {
 		var target = e.target;
 
-		this.setState({
-			...this.state,
-			userInfo: {
-				...this.state.userInfo,
-				[target.name]: target.name === 'total' ? parseInt(target.value) : target.value,
-			}
-		});
+		if(target.name === 'phone') {
+			this.setState({
+				...this.state,
+				userInfo: {
+					...this.state.userInfo,
+					[target.name]:target.value,
+					password: target.value.substr(target.value.length - 4, target.value.length),
+				}
+			});
+		} else if(target.name === 'total') {
+			this.setState({
+				...this.state,
+				userInfo: {
+					...this.state.userInfo,
+					[target.name]: parseInt(target.value)
+				}
+			});
+		} else {
+			this.setState({
+				...this.state,
+				userInfo: {
+					...this.state.userInfo,
+					[target.name]: target.value,
+				}
+			});
+		}
+
 	}
 
 	onSubmit = () => {
@@ -71,14 +90,14 @@ class Home extends React.Component {
 					'Content-Type': 'application/json',
 					'Cache-Control': 'no-cache',
 					'Accept': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+					Authorization: `Bearer ${getAuthToken()}`,
 				}
 			};
-			await axios.post("http://3.35.226.16:8080/api/auth/user/signup" ,
+			await axios.post("http://13.125.53.84:8080/api/auth/user/signup" ,
 				JSON.stringify(userInfo), requestOption )
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
-					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
+					axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken()}`;
 					console.log(resData);
 					this.openModal();
 				})
@@ -113,7 +132,7 @@ class Home extends React.Component {
 				role: 'ROLE_USER',
 				remaining: 0,
 				total: 0,
-				trainer_id: trainerId ? trainerId : '',
+				trainer_id: getAuthTrainerId() ? getAuthTrainerId() : '',
 				until: "2022-12-31"
 			}
 		});
@@ -141,10 +160,10 @@ class Home extends React.Component {
 						<div className={'form_box'}>
 							<input type="text" className={'form_input'} placeholder={'생년월일을 입력해 주세요'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'birth'}/>
 							<label className={'form_label'}>생년월일</label>
-							<p className={'form_detail'}>예) 1992.02.28</p>
+							<p className={'form_detail'}>예) 1992-02-28</p>
 						</div>
 						<div className={'form_box'}>
-							<input type="text" className={'form_input'} placeholder={'01012345678'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'phone'}/>
+							<input type="number" className={'form_input'} placeholder={'01012345678'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate} name={'phone'}/>
 							<label className={'form_label'}>전화번호</label>
 							<p className={'form_detail'}>‘-’ 없이 입력해 주세요 </p>
 						</div>

@@ -2,8 +2,9 @@ import React from "react";
 import {Icon} from "asset/js/icon";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
+import {nanoid} from "nanoid";
 
-const trainerId = localStorage.getItem('login-id');
+import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
 
 class Aside extends React.Component {
 	constructor(props) {
@@ -16,13 +17,13 @@ class Aside extends React.Component {
 			},
 			manageList: [
 				{
-					title:'스케줄', icon: <Icon.ic24Schedule/>, router: '/schedule', active: false,
+					title:'스케줄', icon: <Icon.ic24Schedule/>, router: '/schedule/trainer', active: false,
 					subMenu: [
-						{title:'트레이너', router: '/schedule/trainer', active: false},
-						{title:'내 회원', router: '/schedule/member', active: false}
+						{title:'트레이너', router: '/schedule/trainer', active: false, sub: 'trainer'},
+						{title:'내 회원', router: '/schedule/member', active: false, sub: 'member'}
 					]
 				},
-				{title:'회원 관리', icon: <Icon.ic24MemberManage/>, router: '/', active: true},
+				{title:'회원 관리', icon: <Icon.ic24MemberManage/>, router: '/manage', active: true},
 			],
 		};
 
@@ -36,7 +37,7 @@ class Aside extends React.Component {
 	onCheckRouter = () => {
 		const currentPage = this.props.link;
 		this.state.manageList.map((value, index) => {
-				if(value.router === currentPage) {
+				if(value.router.match(currentPage)) {
 					return value.active = true;
 				} else {
 					return value.active = false;
@@ -67,6 +68,7 @@ class Aside extends React.Component {
 
 	render() {
 		const {centerName, userImage, manageList} = this.state;
+		const {personalType} = this.props;
 		return (
 			<div className={'aside'}>
 				<div className={'aside_header'}>
@@ -87,10 +89,9 @@ class Aside extends React.Component {
 
 						<div className={'information'}>
 							<div  className={classNames('name')}>
-								{/*{centerName}*/}
-								{trainerId || '로그인 해주세요.'}
+								{getAuthTrainerId() || '로그인 해주세요.'}
 							</div>
-							<p className={'description'}>{trainerId || '로그인 해주세요.'}</p>
+							<p className={'description'}>{getAuthTrainerId() || '로그인 해주세요.'}</p>
 							<button type={'button'} className={'btn_setting'}>
 								<Icon.ic14Setting/> 계정설정
 							</button>
@@ -113,7 +114,7 @@ class Aside extends React.Component {
 								{ value.subMenu &&
 									<div className={'sub_area'}>
 										{value.subMenu.map((value, index) =>
-											<Link to={value.router}  className={classNames('sub_link', {'active' : value.active} )}>
+											<Link to={value.router} key={nanoid()} className={classNames('sub_link', {'active' : value.sub === personalType} )}>
 												{value.title}
 											</Link>
 										)}

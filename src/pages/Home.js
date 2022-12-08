@@ -1,9 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import classNames from 'classnames';
+import {Icon} from "asset/js/icon";
 
 import Aside from 'components/Aside';
+import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
 import axios from "axios";
+import {nanoid} from "nanoid";
 
 class Home extends React.Component {
 	constructor(props) {
@@ -20,19 +23,19 @@ class Home extends React.Component {
 
 	getUserInfoApi = async () => {
 		try{
-			// let trainerId = this.state.trainerId;
-			const trainerId = {trainer_id: localStorage.getItem('login-id')};
+			// let trainer_id = this.state.trainer_id;
+			// const trainer_id = {trainer_id: localStorage.getItem('login-id')};
 			const requestOption ={
-				params : trainerId,
+				// params : trainer_id,
 				headers: {
 					'Content-Type': 'application/json',
 					'Cache-Control': 'no-cache',
 					'Accept': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+					Authorization: `Bearer ${getAuthToken()}`,
 					// 'Authorization': `${localStorage.getItem('access-token')}`
 				},
 			};
-			await axios.get("http://3.35.226.16:8080/api/auth/trainer/userall", requestOption )
+			await axios.get("http://13.125.53.84:8080/api/auth/trainer/userall", requestOption )
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
 					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
@@ -58,13 +61,15 @@ class Home extends React.Component {
 
 	render() {
 		const {memberList} = this.state;
+		if(!getAuthTrainerId()) {
+			return <Navigate replace to="/login" />;
+		}
 		return (
 			<div id={'wrap'} className={classNames('home_wrap')}>
-				<Aside link={'/'}/>
+				<Aside link={'/manage'}/>
 				<div className="container">
-					<h2 className={'blind'}>회원 관리</h2>
 					<div className={'notify_area'}>
-
+						<h2>회원 관리</h2>
 					</div>
 					<div className={'section'}>
 						<div className={'article'}>
@@ -84,10 +89,12 @@ class Home extends React.Component {
 						<h3>회원 ({memberList.length}명)</h3>
 						<ul className={'member_list'}>
 							{memberList.map((value, index) =>
-								<li key={`hash--${value.id}`} className={'item'}>
-									<strong>{value.name}</strong>
-									<span className={'date'}>{value.date}</span>
-									<button type={'button'} className={'btn_edit'}>정보 수정</button>
+								<li key={nanoid()} className={'item'}>
+									<Link to={`/manage/detail`} state={{personal:value}}>
+										<strong>{value.name}</strong>
+										<span className={'date'}>{value.date}</span>
+										<i className={'arrow'}><Icon.ic24BulletArrowRight/></i>
+									</Link>
 								</li>
 							)}
 						</ul>

@@ -90,6 +90,13 @@
 	}
 }
 
+@mixin apperanceNone {
+	-o-appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
 $sqrt_2: 1.41421356237;
 
 // bullet icon SCSS mixin '>'

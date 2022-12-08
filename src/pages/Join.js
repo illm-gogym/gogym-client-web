@@ -60,7 +60,7 @@ class Join extends React.Component {
 				// withCredentials: true
 			};
 
-			await axios.post("http://3.35.226.16:8080/api/auth/trainer/signup" ,
+			await axios.post("http://13.125.53.84:8080/api/auth/trainer/signup" ,
 				JSON.stringify(userInfo), requestOption )
 
 				.then(res =>{

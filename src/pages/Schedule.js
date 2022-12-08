@@ -5,12 +5,14 @@ import 'react-calendar/dist/Calendar.css';
 
 import Aside from 'components/Aside';
 import Modal from "components/Modal";
-// import Calenders from 'components/Calendars';
 import WeekCalenders from 'components/WeekCalenders';
+import CalenderWeekday from 'components/CalenderWeekday';
+import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
 
 import { useParams } from "react-router-dom";
 import { nanoid } from 'nanoid';
 import axios from "axios";
+
 
 function withParams(Component) {
 	return props => <Component {...props} params={useParams()} />;
@@ -19,6 +21,8 @@ function withParams(Component) {
 class Schedule extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.calendarRef = React.createRef();
 
 		this.state = {
 			modalOpen: false,
@@ -41,24 +45,19 @@ class Schedule extends React.Component {
 				{'date': '2022. 11. 24 10:30', 'name': '한가인'},
 			],
 			taskList: [
-				{'date': '2022. 11. 21 09:00', 'name': '한예슬'},
-				{'date': '2022. 11. 21 12:00', 'name': '김태희'},
-				{'date': '2022. 11. 26 17:00', 'name': '비'},
-				{'date': '2022. 11. 25 11:00', 'name': '한가인'},
-				{'date': '2022. 11. 23 20:30', 'name': '전지현'},
-				{'date': '2022. 11. 24 10:30', 'name': '한가인'},
+				// {'date': '2022. 11. 21 09:00', 'name': '한예슬'},
 			],
 			addScheduleList: [],
 			addSchedule: {
 				name: null,
-				date: null,
-				startTime: null,
-				endTime: null,
-				description: null
+				date: this.dateFormatYYYYMMDD(new Date()),
+				start_time: null,
+				end_time: null,
+				description: '',
+				user_phone: null,
+				usage_state: -1
 			},
-			trainerId: {
-				trainer_id: "bellgym"
-			}
+			selectMember: 'all',
 		};
 	}
 
@@ -69,6 +68,8 @@ class Schedule extends React.Component {
 	};
 
 	closeModal = () => {
+		this.addUserReservationApi();
+
 		this.setState({
 			modalOpen: false,
 			originTaskList: [
@@ -85,8 +86,9 @@ class Schedule extends React.Component {
 
 	makeOriginData = () => {
 		var list = [];
+
 		this.state.addScheduleList.map((value, index)=> {
-			var newDate = new Date(`${value.date} ${value.startTime}`);
+			var newDate = new Date(`${value.date} ${value.start_time}`);
 			list.push({name: value.name, date: newDate});
 		})
 
@@ -96,36 +98,51 @@ class Schedule extends React.Component {
 		return list;
 	}
 
-	onSelectMember = (e) => {
-		var name = e.target.innerText;
-		var list = [];
-		this.state.originTaskList.map((value, index) => {
-			if(name === value.name )
-				list.push(value);
-		})
+	onSelectMember = (e, value) => {
 		this.setState({
-			taskList: list,
-		})
+			selectMember: value.user_phone,
+		});
 	}
 
 	onAddSchedule = (e) => {
 		this.openModal();
 	}
 
+	getUserPhone = (name) => {
+		let phone = null;
+		this.state.memberList.map((value, index) => {
+			if(value.name === name) {
+				phone = value.user_phone;
+			}
+		});
+
+		return phone;
+	}
+
 	onInputChange = (e) => {
 		var target = e.target;
 
-		if(target.name === 'startTime') {
+		if(target.name === 'start_time') {
 			const time = e.target.value;
 			let now = new Date();
 			let date = new Date(`${now.getFullYear()} ${now.getMonth()} ${now.getDate()} ${time}`);
-			let endTime = `${date.getHours() + 1}:${date.getMinutes()}`;
+			let endTime = `${date.getHours() + 1}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}`;
+			console.log(endTime);
 
 			this.setState({
 				addSchedule : {
 					...this.state.addSchedule,
 					[target.name]: target.value,
-					endTime: endTime,
+					end_time: endTime,
+				}
+			})
+		} else if (target.name === 'name') {
+			const phone = this.getUserPhone(target.value);
+			this.setState({
+				addSchedule : {
+					...this.state.addSchedule,
+					[target.name]: target.value,
+					user_phone: phone,
 				}
 			})
 		} else {
@@ -142,11 +159,13 @@ class Schedule extends React.Component {
 		this.setState({
 			addSchedule: {
 				name: '',
-				date: '',
-				startTime: '',
-				endTime: '',
+				date: this.dateFormatYYYYMMDD(new Date()),
+				start_time: '',
+				end_time: '',
 				description: ''
 			},
+			selectCardIndex: -1,
+			selectCard: false,
 		})
 	}
 
@@ -159,8 +178,8 @@ class Schedule extends React.Component {
 			addSchedule: {
 				name: data.name,
 				date: data.date,
-				startTime: data.startTime,
-				endTime: data.endTime,
+				start_time: data.start_time,
+				end_time: data.end_time,
 				description: data.description
 			},
 		})
@@ -168,14 +187,26 @@ class Schedule extends React.Component {
 
 	onCopy = (e, index) => {
 		var data = this.state.addScheduleList[index];
+		var newSchedule = {
+			name: data.name,
+			date: data.date,
+			start_time: data.start_time,
+			end_time: data.end_time,
+			description: data.description
+		};
 
 		this.setState({
-			selectCardIndex: index,
+			selectCardIndex: index + 1,
+			selectCard: true,
+			addScheduleList : [
+				...this.state.addScheduleList,
+				newSchedule
+			],
 			addSchedule: {
 				name: data.name,
 				date: data.date,
-				startTime: data.startTime,
-				endTime: data.endTime,
+				start_time: data.start_time,
+				end_time: data.end_time,
 				description: data.description
 			},
 		})
@@ -216,25 +247,44 @@ class Schedule extends React.Component {
 		})
 	}
 
-	getUserInfoApi = async () => {
+	dateFormatYYYYMMDD = (date) => {
+		let month = date.getMonth() + 1;
+		let day = date.getDate();
+
+		month = month >= 10 ? month : '0' + month;
+		day = day >= 10 ? day : '0' + day;
+		return date.getFullYear() + '-' + month + '-' + day ;
+	}
+
+	dateFormatHHMM = (date) => {
+		let month = date.getMonth() + 1;
+		let day = date.getDate();
+		let hour = date.getHours();
+		let minute = date.getMinutes();
+
+		month = month >= 10 ? month : `0${month}`;
+		day = day >= 10 ? day : `0${day}`;
+		hour = hour >= 10 ? hour : `0${hour}`;
+		minute = minute >= 10 ? minute : `0${minute}`;
+
+		return date.getFullYear() + '-'+ month + '-' + day + 'T' + hour + ':' + minute;
+	}
+
+	getTrainerUserApi = async () => {
 		try{
-			// let trainerId = this.state.trainerId;
-			const trainerId = {trainer_id: localStorage.getItem('login-id')};
 			const requestOption ={
-				params : trainerId,
 				headers: {
 					'Content-Type': 'application/json',
 					'Cache-Control': 'no-cache',
 					'Accept': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+					Authorization: `Bearer ${getAuthToken()}`,
 					// 'Authorization': `${localStorage.getItem('access-token')}`
 				},
 			};
-			await axios.get("http://3.35.226.16:8080/api/auth/trainer/userall", requestOption )
+			await axios.get("http://13.125.53.84:8080/api/auth/trainer/userall", requestOption )
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
-					axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access-token')}`;
-					// console.log(resData);
+					axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken()}`;
 					this.setState({
 						memberList : [
 							...resData.data
@@ -250,21 +300,70 @@ class Schedule extends React.Component {
 		}
 	}
 
+	makeSendScheduleList = () => {
+		console.log(this.state.addScheduleList);
+		this.state.addScheduleList.map((value, index) => {
+				let startDate = new Date(`${value.date} ${value.start_time}`);
+				let endDate= new Date(`${value.date} ${value.end_time}`);
+				console.log(startDate);
+				value.start_time = this.dateFormatHHMM(startDate);
+				value.end_time = this.dateFormatHHMM(endDate);
+				value.user_phone = this.getUserPhone(value.name);
+				value.usage_state = '-1';
+				delete value.date;
+				delete value.name;
+			}
+		)
+	}
+
+	addUserReservationApi = async () => {
+		try{
+			this.makeSendScheduleList();
+			const obj = { reservations : this.state.addScheduleList };
+			const scheduleList = JSON.parse(JSON.stringify(obj));
+			console.log(scheduleList);
+			const requestOption ={
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache',
+					'Accept': 'application/json',
+					Authorization: `Bearer ${getAuthToken()}`,
+				}
+			};
+			await axios.post("http://13.125.53.84:8080/api/auth/reservation/add" ,
+				JSON.stringify(scheduleList), requestOption )
+				.then(res =>{
+					const resData = JSON.parse(JSON.stringify(res.data));
+					axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken()}`;
+					// console.log(resData);
+					window.location.reload('/schedule/member');
+				})
+				.catch(ex=>{
+					console.log("login requset fail : " + ex);
+				})
+				.finally(()=>{console.log("login request end")});
+		}catch(e){
+			console.log(e);
+		}
+	}
+
 	componentDidMount() {
 		const { personalType } = this.props.params;
 		this.setState({
 			personalType: personalType,
 		});
-		this.getUserInfoApi();
+		this.getTrainerUserApi();
+		// this.getUserReservationApi();
 	}
 
 	render() {
-		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule, selectCard} = this.state;
+		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule, selectCard, selectCardIndex, selectMember} = this.state;
 		const { personalType } = this.props.params;
 		const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
 		return (
 			<div id={'wrap'} className={classNames('schedule_wrap')}>
-				<Aside link={'/schedule'}/>
+				<Aside link={'/schedule'} personalType={personalType}/>
 				<div className="container">
 					<div className={'notify_area'}>
 						<h2>스케줄 관리</h2>
@@ -281,8 +380,8 @@ class Schedule extends React.Component {
 									{personalType === 'member' ?
 										memberList.map((value, index) =>
 											<li className={'item'} key={nanoid()}>
-												<input type="radio" id={`${value.ins_dtm}--${index}`} className={'input_check'} name={'member'}/>
-												<label htmlFor={`${value.ins_dtm}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
+												<input type="radio" id={`${value.ins_dtm}--${index}`} className={'input_check'} name={'member'} onChange={(e) => this.onSelectMember(e, value)} value={value.name} />
+												<label htmlFor={`${value.ins_dtm}--${index}`} className={'input_label'}>
 													<span className={'text'}>{value.name}</span>
 												</label>
 											</li>
@@ -302,10 +401,13 @@ class Schedule extends React.Component {
 
 						<div className={'calender_wrap'}>
 							{personalType === 'member' &&
-								<button type={'button'} className={'btn_add'} onClick={(e) => this.onAddSchedule(e)}>일정 추가</button>
+								<button type={'button'} className={'btn_add'} onClick={(e) => this.onAddSchedule(e)}><Icon.ic16AddSchedule/>일정 추가</button>
 							}
-							{/*<Calenders taskList={taskList} />*/}
-							<WeekCalenders taskList={taskList}  />
+							{/*<Calenders />*/}
+							<CalenderWeekday selectMember={selectMember}/>
+							{/*<CalenderWeekday getUserReservationApi={this.getUserReservationApi} taskList={this.state.taskList} />*/}
+							{/*<WeekCalenders taskList={taskList} getUserReservationApi={this.getUserReservationApi} getTimeUserReservationApi={this.getTimeUserReservationApi} />*/}
+
 						</div>
 					</div>
 				</div>
@@ -316,12 +418,12 @@ class Schedule extends React.Component {
 							<button type={'button'} className={'btn_plus'} onClick={this.onCardReset}><Icon.ic24Plus/></button>
 							<ul className={'plus_list'}>
 								{addScheduleList.map((value, index) =>
-									<li className={'item'} key={nanoid()} >
+									<li className={classNames('item', {selected: index === selectCardIndex? true : false})} key={nanoid()}>
 										<div className={'inner'} onClick={(e) => this.onClickCard(e, index)}>
-											<div className={'text'}>{value.name}</div>
+											<div className={'name'}>{value.name}</div>
 											<div className={'text'}>{value.date} {WEEKDAY[new Date(value.date).getDay()]} </div>
 											<div className={'text'}>
-												{value.startTime}~{value.endTime}
+												{value.start_time}~{value.end_time}
 											</div>
 										</div>
 										<button type={'button'} className={'btn_delete'} onClick={(e) => this.onRemoveCard(e, index)}><Icon.ic14Close/></button>
@@ -335,12 +437,21 @@ class Schedule extends React.Component {
 						</div>
 						<div className={'plus_input_area'}>
 							<label htmlFor="plus_start_time">시간</label>
-							<input type="time" id={'plus_start_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'startTime'} value={addSchedule.startTime || ''}/>
+							<input type="time" id={'plus_start_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'start_time'} value={addSchedule.start_time || ''}/>
 							<span className={'dash'}>-</span>
-							<input type="time" id={'plus_end_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'endTime'} value={addSchedule.endTime || ''}/>
+							<input type="time" id={'plus_end_time'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'end_time'} value={addSchedule.end_time || ''}/>
 						</div>
 						<div className={'plus_input_area'}>
-							<label htmlFor="plus_member">회원</label> <input type="text" id={'plus_member'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'name'} value={addSchedule.name || ''}/>
+							<label htmlFor="plus_member">회원</label>
+							{/*<input type="text" id={'plus_member'} className={'input'} onChange={(e) =>this.onInputChange(e)} name={'name'} value={addSchedule.name || ''}/>*/}
+							<select name="" id="plus_member" className={'input'} value={addSchedule.name || '회원선택'} name={'name'} onChange={(e) =>this.onInputChange(e)}>
+								<option disabled>회원선택</option>
+								{memberList.map((value, index) =>
+									<option className={'item'} key={nanoid()} value={value.name} >
+										{value.name}
+									</option>
+								)}
+							</select>
 						</div>
 						<div className={'plus_input_area'}>
 							<label htmlFor="plus_description">설명</label> <textarea id={'plus_description'} className={'input'} rows={'4'} onChange={(e) =>this.onInputChange(e)} name={'description'} value={addSchedule.description || ''}/>
@@ -357,3 +468,36 @@ class Schedule extends React.Component {
 }
 
 export default withParams(Schedule);
+
+// getUserReservationApi = async () => {
+// 	try{
+// 		const requestOption ={
+// 			// params : param,
+// 			headers: {
+// 				'Content-Type': 'application/json',
+// 				'Cache-Control': 'no-cache',
+// 				'Accept': 'application/json',
+// 				Authorization: `Bearer ${getAuthToken()}`,
+// 			},
+// 		};
+// 		await axios.get("http://13.125.53.84:8080/api/auth/reservation/all", requestOption )
+// 			.then(res =>{
+// 				const resData = JSON.parse(JSON.stringify(res.data));
+// 				axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken}`;
+// 				// console.log(resData);
+// 				this.setState({
+// 					taskList : [
+// 						...resData.data
+// 					]
+// 				})
+// 				return resData.data;
+// 			})
+// 			.catch(ex=>{
+// 				console.log("login requset fail : " + ex);
+// 				// console.log(ex.response.status);
+// 			})
+// 			.finally(()=>{console.log("login request end")});
+// 	}catch(e){
+// 		console.log(e.response);
+// 	}
+// }

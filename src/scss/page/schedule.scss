@@ -44,12 +44,15 @@
 			@include blind;
 
 			&:checked ~ .input_label {
+				//background-color: red;
+
 				&::before {
 					background: url("data:image/svg+xml,%3Csvg width='11' height='9' viewBox='0 0 11 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4.26667L4.19796 7.58307C4.40981 7.80277 4.76735 7.78306 4.95377 7.5414L10 1' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E%0A") no-repeat center;
 					background-color: currentColor;
 				}
 			}
 		}
+
 		.input_label {
 			line-height: 20px;
 			color: #5784FC;
@@ -109,13 +112,19 @@
 
 	.btn_add {
 		position: absolute;
-		top: 0;
+		top: 30px;
 		right: 0;
-		color: #25AAF5;
-		height: 32px;
+		color: #666;
+		height: 28px;
 		padding: 0 14px;
-		border: 1px solid #25AAF5;
+		border: 1px solid #d9d9d9;
+		font-size: 12px;
 		border-radius: 2px;
+
+		svg {
+			margin-right: 6px;
+			vertical-align: -4px;
+		}
 	}
 }
 
@@ -227,10 +236,6 @@
 
 .modal {
 	.schedule_add_area {
-		&.select_card {
-
-		}
-
 		.plus_area {
 			margin: 0 -16px 20px;
 			padding: 12px 0 12px 16px;
@@ -241,8 +246,8 @@
 
 		.btn_plus {
 			float: left;
-			width: 76px;
-			height: 76px;
+			width: 70px;
+			height: 70px;
 			margin-right: 8px;
 			background: #fff;
 			border: 1px solid #E1E1E1;
@@ -252,25 +257,38 @@
 		.plus_list {
 			overflow-x: auto;
 			white-space: nowrap;
+			color: #666;
 
 			.item {
 				position: relative;
 				display: inline-block;
 				width: 157px;
-				height: 76px;
+				height: 70px;
 				margin-right: 8px;
-				padding: 11px 8px;
-				font-size: 12px;
-				line-height: 14px;
+				padding: 9px;
+				font-size: 11px;
+				line-height: 12px;
 				vertical-align: top;
 				background-color: #fff;
 				border: 1px solid #E1E1E1;
 				box-sizing: border-box;
+				cursor: pointer;
+
+				&.selected {
+					border-color: #25AAF5;
+				}
+
+				.name {
+					font-weight: 700;
+					color: #333;
+
+					& + .text {
+						margin-top: 10px;
+					}
+				}
 
 				.text {
-					& ~ .text {
-						margin-top: 5px;
-					}
+					margin-top: 5px;
 				}
 
 				.btn_delete {
@@ -278,6 +296,12 @@
 					top: 8px;
 					right: 8px;
 					line-height: 0;
+
+					&:hover {
+						path {
+							fill: #25AAF5;
+						}
+					}
 				}
 
 				.btn_copy {
@@ -285,6 +309,16 @@
 					top: 8px;
 					right: 26px;
 					line-height: 0;
+
+					&:hover {
+						rect:not(:first-child) {
+							stroke: #25AAF5;
+						}
+
+						path {
+							stroke: #25AAF5;
+						}
+					}
 				}
 			}
 		}
@@ -306,6 +340,10 @@
 				border: 1px solid #D9D9D9;
 				border-radius: 2px;
 				box-sizing: border-box;
+			}
+
+			select {
+				@include apperanceNone;
 			}
 			input {
 				height: 36px;

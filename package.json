@@ -5,6 +5,7 @@
   "proxy": "http://localhost:3000/",
   "homepage": "https://illm-gogym.github.io/gogym-client-web-admin",
   "dependencies": {
+    "@daypilot/daypilot-lite-react": "^3.11.0",
     "@mobiscroll/react": "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.19.2.tgz",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
