@@ -176,6 +176,12 @@ class Home extends React.Component {
 							<label className={'form_label'}>수강권 (횟수)</label>
 							<p className={'form_detail'}>안내문구 작성하기</p>
 						</div>
+
+						<div className={'form_box'}>
+							<input type="text" className={'form_input'} placeholder={'0'} required={true} onChange={(e) =>this.onInputChange(e)} onKeyUp={this.validate}  name={'total'}/>
+							<label className={'form_label'}>수강권 (횟수)</label>
+							<p className={'form_detail'}>안내문구 작성하기</p>
+						</div>
 					</form>
 
 					<div className={'register_area'}>

@@ -6,6 +6,8 @@ import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
 import {dateFormatResetWithTime, dateFormatReset} from 'Util/DateFormat';
 import axios from "axios";
 
+const palette = [];
+
 class CalendarWeekday extends React.Component {
 
 	constructor(props) {
@@ -24,7 +26,8 @@ class CalendarWeekday extends React.Component {
 					// 	id: 1,
 					// 	text: "Event 1",
 					// 	start: "2022-12-07T10:30:00",
-					// 	end: "2022-12-07T11:30:00"
+					// 	end: "2022-12-07T11:30:00",
+					//  backColor: "#6aa84f"
 					// }
 				],
 				onBeforeEventRender: args => {
@@ -132,6 +135,14 @@ class CalendarWeekday extends React.Component {
 		});
 	}
 
+	setChangeReservation = (value) => {
+		if(!value) {
+			this.getUserReservationApi();
+		} else {
+			this.getUserNameReservationApi(value);
+		}
+	}
+
 	getUserReservationApi = async () => {
 		try{
 			const requestOption ={
@@ -199,7 +210,7 @@ class CalendarWeekday extends React.Component {
 		this.setChangeHeader();
 
 		if(this.props.selectMember !== prevProps.selectMember && this.props.selectMember !== 'all') {
-			this.getUserNameReservationApi(this.props.selectMember);
+			this.setChangeReservation(this.props.selectMember);
 		}
 	}
 

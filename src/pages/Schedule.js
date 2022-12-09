@@ -243,7 +243,8 @@ class Schedule extends React.Component {
 		this.setState({
 			addScheduleList : [
 				...tempList
-			]
+			],
+			selectCard: false,
 		})
 	}
 
@@ -378,14 +379,22 @@ class Schedule extends React.Component {
 							<div className={'list_area'}>
 								<ul className={'person_list'}>
 									{personalType === 'member' ?
-										memberList.map((value, index) =>
+										<>
+										<li className={'item'} key={nanoid()}>
+											<input type="radio" id={'sort_all'} className={'input_check'} name={'member'} onChange={(e) => this.onSelectMember(e, '-1')} value={'all'} />
+											<label htmlFor={'sort_all'} className={'input_label'}>
+												<span className={'text'}>전체보기</span>
+											</label>
+										</li>
+										{memberList.map((value, index) =>
 											<li className={'item'} key={nanoid()}>
 												<input type="radio" id={`${value.ins_dtm}--${index}`} className={'input_check'} name={'member'} onChange={(e) => this.onSelectMember(e, value)} value={value.name} />
 												<label htmlFor={`${value.ins_dtm}--${index}`} className={'input_label'}>
 													<span className={'text'}>{value.name}</span>
 												</label>
 											</li>
-										) :
+										)}
+										</> :
 										trainerList.map((value, index) =>
 											<li className={'item'} key={nanoid()}>
 												<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
