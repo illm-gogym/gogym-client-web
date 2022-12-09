@@ -182,6 +182,13 @@ class Home extends React.Component {
 							<label className={'form_label'}>수강권 (횟수)</label>
 							<p className={'form_detail'}>안내문구 작성하기</p>
 						</div>
+
+						<div className={classNames('form_box', 'time')}>
+							<label htmlFor="plus_start_time">시간</label>
+							<input type="time" id={'plus_start_time'} className={'form_input'} onChange={(e) =>this.onInputChange(e)} name={'start_time'} />
+							<span className={'dash'}>-</span>
+							<input type="time" id={'plus_end_time'} className={'form_input'} onChange={(e) =>this.onInputChange(e)} name={'end_time'}/>
+						</div>
 					</form>
 
 					<div className={'register_area'}>

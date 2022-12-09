@@ -5,7 +5,7 @@ export function getAuthToken() {
 };
 
 export function getAuthTrainerId() {
-	return Authentication.trainer_id === null ? false : Authentication.trainer_id;
+	return Authentication  === null ? false : Authentication.trainer_id;
 };
 
 export function getUserData() {
