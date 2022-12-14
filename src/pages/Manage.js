@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import {Icon} from "asset/js/icon";
 
 import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
-import {dateFormatYYYYDDMM} from 'Util/DateFormat';
+import {dateFormatYYYYDDMM, dateFormatWithTime} from 'Util/DateFormat';
 import Aside from 'components/Aside';
 import {useParams, useLocation, useNavigate, Link} from "react-router-dom";
 import axios from "axios";
@@ -71,7 +71,6 @@ class Manage extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.state.personalList.length !== prevState.personalList.length) {
-			console.log('ttt');
 			this.setState({
 				isLoadDate: true,
 			});
@@ -96,7 +95,8 @@ class Manage extends React.Component {
 					{personalList.length - index}
 				</span>
 				<span className={classNames('date')}>
-					{dateFormatYYYYDDMM(value.reservation.start_time, '.', 'day')}
+					{dateFormatWithTime(value.reservation.start_time, '.', 'day')}
+
 				</span>
 				<span className={classNames('state', {'prearrange' : value.reservation.usage_state === -1} )}>
 					{value.reservation.usage_state === -1 ? '예정' : '완료'}

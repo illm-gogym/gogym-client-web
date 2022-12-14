@@ -36,8 +36,16 @@
 
 		.item {
 			float: left;
+			display: flex;
 			width: 33.33%;
 			margin-top: 14px;
+			line-height: 19px;
+			align-items: center;
+			cursor: pointer;
+
+			.chk_box {
+				margin-right: 6px;
+			}
 		}
 
 		.input_check {

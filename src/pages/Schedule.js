@@ -5,6 +5,8 @@ import 'react-calendar/dist/Calendar.css';
 
 import Aside from 'components/Aside';
 import Modal from "components/Modal";
+import ChkBox from "components/ChkBox";
+
 import WeekCalenders from 'components/WeekCalenders';
 import CalenderWeekday from 'components/CalenderWeekday';
 import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
@@ -29,20 +31,11 @@ class Schedule extends React.Component {
 			selectCard: false,
 			selectCardIndex: -1,
 			trainerList: [
-				{id:'10101', name: '김동수'},
-				{id:'10102', name: '김문수'},
-				{id:'10103', name: '라강민'},
-				{id:'10104', name: '이선아'},
-				{id:'10105', name: '조영은'},
+				// {id:'10101', name: '김동수'},
 			],
 			memberList: [],
 			originTaskList: [
-				{'date': '2022. 11. 21 09:00', 'name': '한예슬'},
-				{'date': '2022. 11. 21 12:00', 'name': '김태희'},
-				{'date': '2022. 11. 26 17:00', 'name': '비'},
-				{'date': '2022. 11. 25 11:00', 'name': '한가인'},
-				{'date': '2022. 11. 23 20:30', 'name': '전지현'},
-				{'date': '2022. 11. 24 10:30', 'name': '한가인'},
+				// {'date': '2022. 11. 21 09:00', 'name': '한예슬'},
 			],
 			taskList: [
 				// {'date': '2022. 11. 21 09:00', 'name': '한예슬'},
@@ -99,6 +92,15 @@ class Schedule extends React.Component {
 	}
 
 	onSelectMember = (e, value) => {
+		if(!value.user_phone) {
+			const list = this.state.memberList.map((value, index) => {
+				value.checkState = !value.checkState;
+				return value;
+			})
+			this.setState({
+				memberList: list
+			});
+		}
 		this.setState({
 			selectMember: value.user_phone,
 		});
@@ -302,11 +304,9 @@ class Schedule extends React.Component {
 	}
 
 	makeSendScheduleList = () => {
-		console.log(this.state.addScheduleList);
 		this.state.addScheduleList.map((value, index) => {
 				let startDate = new Date(`${value.date} ${value.start_time}`);
 				let endDate= new Date(`${value.date} ${value.end_time}`);
-				console.log(startDate);
 				value.start_time = this.dateFormatHHMM(startDate);
 				value.end_time = this.dateFormatHHMM(endDate);
 				value.user_phone = this.getUserPhone(value.name);
@@ -349,6 +349,24 @@ class Schedule extends React.Component {
 		}
 	}
 
+	makeCheckMemberList = () => {
+		const list = this.state.memberList.map((value, index) => {
+				value.checkState = true;
+				return value;
+			}
+		)
+
+		this.setState({
+			memberList : list
+		})
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if(prevState.memberList.length !== this.state.memberList.length) {
+			this.makeCheckMemberList();
+		}
+	}
+
 	componentDidMount() {
 		const { personalType } = this.props.params;
 		this.setState({
@@ -377,34 +395,24 @@ class Schedule extends React.Component {
 								<button className={'btn_menu'}><Icon.ic20BulletArrow/></button>
 							</div>
 							<div className={'list_area'}>
-								<ul className={'person_list'}>
+								<div className={'person_list'}>
 									{personalType === 'member' ?
 										<>
-										<li className={'item'} key={nanoid()}>
-											<input type="radio" id={'sort_all'} className={'input_check'} name={'member'} onChange={(e) => this.onSelectMember(e, '-1')} value={'all'} />
-											<label htmlFor={'sort_all'} className={'input_label'}>
-												<span className={'text'}>전체보기</span>
-											</label>
-										</li>
-										{memberList.map((value, index) =>
-											<li className={'item'} key={nanoid()}>
-												<input type="radio" id={`${value.ins_dtm}--${index}`} className={'input_check'} name={'member'} onChange={(e) => this.onSelectMember(e, value)} value={value.name} />
-												<label htmlFor={`${value.ins_dtm}--${index}`} className={'input_label'}>
-													<span className={'text'}>{value.name}</span>
-												</label>
-											</li>
-										)}
+										<ChkBox label={{name: '전체보기', user_phone: false, checkState: true}} onSelectMember={this.onSelectMember} checkState={true}/>
+										{memberList.map((value, index) => {
+											return	<ChkBox label={value} onSelectMember={this.onSelectMember} />
+										})}
 										</> :
 										trainerList.map((value, index) =>
-											<li className={'item'} key={nanoid()}>
+											<div className={'item'} key={nanoid()}>
 												<input type="radio" id={`${value.id}--${index}`} className={'input_check'} name={'trainer'}/>
 												<label htmlFor={`${value.id}--${index}`} className={'input_label'} onClick={(e) => this.onSelectMember(e)}>
 													<span className={'text'}>{value.name}</span>
 												</label>
-											</li>
+											</div>
 										)
 									}
-								</ul>
+								</div>
 							</div>
 						</div>
 

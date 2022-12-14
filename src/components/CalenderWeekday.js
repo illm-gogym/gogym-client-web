@@ -18,7 +18,7 @@ class CalendarWeekday extends React.Component {
 				viewType: "Week",
 				headerDateFormat: `yyyy-MM-d`, //dddd_d
 				headerHeight: '60',
-				durationBarVisible: true,
+				durationBarVisible: false,
 				cellHeight: '15',
 				startDate: this.makeNewDate(new Date()),
 				events: [
@@ -31,7 +31,11 @@ class CalendarWeekday extends React.Component {
 					// }
 				],
 				onBeforeEventRender: args => {
-					// console.log(args);
+					// console.log(args.data);
+					// console.log(args.data.text);
+					// args.data.backColor = "#93c47d";
+					// args.data.fontColor = "white";
+					// args.data.html= `<div>ttt</div>`
 				},
 				onTimeRangeSelected : args => {
 					// this.calendar.message("Selected range: " + args.start.toString("hh:mm tt") + " - " + args.end.toString("hh:mm tt"));
@@ -39,8 +43,21 @@ class CalendarWeekday extends React.Component {
 					// console.log(args.end);
 				},
 				afterRender : args => {
+					console.log(args);
 				},
-				onEventMove : args => {
+				onEventMoved : args => {
+					this.setChangeHeader();
+					// console.log(args);
+					console.log(args.newStart);
+					console.log(args.newEnd);
+				},
+				onEventResized :  args => {
+					this.setChangeHeader();
+					console.log(args.newStart);
+					console.log(args.newEnd);
+				},
+				onEventClicked : args => {
+					console.log(args);
 				}
 			},
 			periodStartDate: '',
@@ -158,7 +175,7 @@ class CalendarWeekday extends React.Component {
 				.then(res =>{
 					const resData = JSON.parse(JSON.stringify(res.data));
 					axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken}`;
-					// console.log(resData);
+					console.log(resData.data);
 					this.makeTaskList(resData.data);
 
 				})

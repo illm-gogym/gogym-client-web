@@ -1,0 +1,20 @@
+.chk_box {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	vertical-align: top;
+	color: #5784FC;
+	line-height: 16px;
+	border: 1px solid currentColor;
+	text-align: center;
+	box-sizing: border-box;
+
+	&:not(:empty) {
+		background-color: currentColor;
+	}
+
+	svg {
+		vertical-align: 1px;
+	}
+}

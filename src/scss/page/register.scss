@@ -23,7 +23,12 @@
 			}
 
 			&.time {
+				display: flex;
+				align-items: center;
 
+				.dash {
+					padding: 0 10px;
+				}
 			}
 		}
 

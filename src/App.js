@@ -22,7 +22,7 @@ class App extends React.Component {
 				{/*<Schedule />*/}
 				<BrowserRouter basename={process.env.PUBLIC_URL}>
 					<Routes>
-						<Route path="/" element={<Navigate replace to="manage"/>} />
+						<Route path="/" element={<Navigate replace to="schedule/trainer"/>} />
 						<Route exact path={'manage'} element={<Home/>} />
 						<Route exact path={'manage/detail'} element={<Manage/>} />
 						<Route exact path={'manage/class'} element={<ManageClass/>} />

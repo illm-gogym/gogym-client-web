@@ -62,7 +62,8 @@ class ManageClass extends React.Component {
 									{dateFormatYYYYDDMM(personal.reservation.start_time, '.', 'day')}
 								</div>
 								<p className={'class_description'}>
-									{dateFormatGetTime(personal.reservation.start_time)}~{dateFormatGetTime(personal.reservation.end_time)} 수업 메모
+									{/*{dateFormatGetTime(personal.reservation.start_time)}~{dateFormatGetTime(personal.reservation.end_time)} 수업 메모*/}
+									{personal.reservation.description}
 								</p>
 							</>
 						}

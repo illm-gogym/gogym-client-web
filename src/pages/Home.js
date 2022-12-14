@@ -5,6 +5,7 @@ import {Icon} from "asset/js/icon";
 
 import Aside from 'components/Aside';
 import {getAuthToken, getAuthTrainerId} from 'Util/Authentication';
+import {dateFormatYYYYDDMM, dateFormatWithTime, dateFormatGetMMDD} from 'Util/DateFormat';
 import axios from "axios";
 import {nanoid} from "nanoid";
 
@@ -61,7 +62,7 @@ class Home extends React.Component {
 
 	render() {
 		const {memberList} = this.state;
-		if(!getAuthTrainerId()) {
+		if(!getAuthToken()) {
 			return <Navigate replace to="/login" />;
 		}
 		return (
@@ -92,7 +93,7 @@ class Home extends React.Component {
 								<li key={nanoid()} className={'item'}>
 									<Link to={`/manage/detail`} state={{personal:value}}>
 										<strong>{value.name}</strong>
-										<span className={'date'}>{value.date}</span>
+										<span className={'date'}>{dateFormatYYYYDDMM(value.ins_dtm, '.')} ~ {dateFormatYYYYDDMM(value.upd_dtm, '.')}</span>
 										<i className={'arrow'}><Icon.ic24BulletArrowRight/></i>
 									</Link>
 								</li>

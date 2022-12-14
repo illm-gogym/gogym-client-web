@@ -1,4 +1,5 @@
-export function dateFormatWithTime(date, splice='-') {
+export function dateFormatWithTime(date, splice='-', type='default') {
+	date = new Date(date);
 	let month = date.getMonth() + 1;
 	let day = date.getDate();
 	let hour = date.getHours();
@@ -9,7 +10,14 @@ export function dateFormatWithTime(date, splice='-') {
 	hour = hour >= 10 ? hour : '0' + hour;
 	minute = minute >= 10 ? minute : '0' + minute;
 
-	return date.getFullYear() + splice + month + splice + day + ' ' + hour + ':' + minute;
+	if(type === 'day') {
+		const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
+		let week = WEEKDAY[date.getDay()];
+		return date.getFullYear() + splice + month + splice + day + ' ' + hour + ':' + minute + ' ' + week + '요일';
+	} else {
+		return date.getFullYear() + splice + month + splice + day + ' ' + hour + ':' + minute;
+	}
+
 }
 
 export function dateFormatYYYYDDMM(date, splice='-', type='default') {
@@ -33,6 +41,7 @@ export function dateFormatYYYYDDMM(date, splice='-', type='default') {
 
 
 export function dateFormatReset(date, splice='-', type='full') {
+	date = new Date(date);
 	let month = date.getMonth() + 1;
 	let day = date.getDate();
 	month = month >= 10 ? month : '0' + month;
@@ -45,6 +54,7 @@ export function dateFormatReset(date, splice='-', type='full') {
 }
 
 export function dateFormatResetWithTime(date, splice='-') {
+	date = new Date(date);
 	let month = date.getMonth() + 1;
 	let day = date.getDate();
 	let hour = date.getHours();
@@ -67,5 +77,16 @@ export function dateFormatGetTime(date) {
 	minute = minute >= 10 ? minute : '0' + minute;
 
 	return hour + ':' + minute;
+}
+
+export function dateFormatGetMMDD(date, splice='-') {
+	date = new Date(date);
+	let month = date.getMonth() + 1;
+	let day = date.getDate();
+
+	month = month >= 10 ? month : '0' + month;
+	day = day >= 10 ? day : '0' + day;
+
+	return month + splice + day;
 }
 // export
