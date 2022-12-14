@@ -66,6 +66,11 @@ class Aside extends React.Component {
 		}
 	};
 
+	onLogout () {
+		localStorage.clear();
+		window.location.reload();
+	}
+
 	render() {
 		const {centerName, userImage, manageList} = this.state;
 		const {personalType} = this.props;
@@ -92,8 +97,8 @@ class Aside extends React.Component {
 								{getAuthTrainerId() || '로그인 해주세요.'}
 							</div>
 							<p className={'description'}>{getAuthTrainerId() || '로그인 해주세요.'}</p>
-							<button type={'button'} className={'btn_setting'}>
-								<Icon.ic14Setting/> 계정설정
+							<button type={'button'} className={'btn_setting'} onClick={this.onLogout}>
+								<Icon.ic14Setting/> 로그아웃
 							</button>
 						</div>
 					</div>
