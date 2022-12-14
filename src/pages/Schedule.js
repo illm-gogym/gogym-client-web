@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {Icon} from "asset/js/icon";
+import { Link, Navigate } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css';
 
 import Aside from 'components/Aside';
@@ -380,6 +381,9 @@ class Schedule extends React.Component {
 		const { modalOpen, trainerList, memberList, taskList, addScheduleList, addSchedule, selectCard, selectCardIndex, selectMember} = this.state;
 		const { personalType } = this.props.params;
 		const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
+		if(!getAuthToken()) {
+			return <Navigate replace to="/login" />;
+		}
 		return (
 			<div id={'wrap'} className={classNames('schedule_wrap')}>
 				<Aside link={'/schedule'} personalType={personalType}/>
